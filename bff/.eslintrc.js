@@ -24,7 +24,6 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-explicit-any': 0,
-
   },
   settings: {
     "node": {
@@ -34,8 +33,8 @@ module.exports = {
       "typescript": {}
     }
   },
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    parser: "@typescript-eslint/parser"
+    sourceType: 'module',
   },
 }
