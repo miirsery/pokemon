@@ -1,23 +1,22 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
+import { PokemonMapper } from '../../../mappers/PokemoinMapper'
 
-const CatalogSchema = Type.Object({
-  count: Type.Optional(Type.Number()),
-  next: Type.Optional(Type.String()),
-  previous: Type.Optional(Type.String()),
+const PaginationSchema = Type.Object({
+  totalPages: Type.Number(),
+  currentPage: Type.Number()
+})
+export type PaginationSchemaType = Static<typeof PaginationSchema>
 
-  meta: Type.Optional(Type.Object({
-    totalPages: Type.Number(),
-    currentPage: Type.Number()
-  })),
-
+const ResponseSchema = Type.Object({
   results: Type.Optional(Type.Array(
     Type.Object({
       name: Type.Optional(Type.String()),
       url: Type.Optional(Type.String()),
       totalPages: Type.Optional(Type.Number())
     })
-  ))
+  )),
+  meta: PaginationSchema,
 })
 
 const QueryParameterSchema = Type.Object({
@@ -25,16 +24,6 @@ const QueryParameterSchema = Type.Object({
   offset: Type.Number()
 })
 
-const ResponseSchema = Type.Object({
-  data: CatalogSchema
-})
-
-// temp pagination
-const pagination = (_count: number, _limit: number, _offset: number ) => {
-  let totalPages = Math.ceil(_count / _limit)
-  let currentPage: number = Math.ceil(_offset / _limit )
-  return { totalPages, currentPage }
-}
 export type QueryParameterSchemaType = Static<typeof QueryParameterSchema>
 export type ResponseSchemaType = Static<typeof ResponseSchema>
 
@@ -58,10 +47,16 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
             ...req.query,
           }
         })
+        const meta = PokemonMapper.mapPaginationToFrontend(
+          data.count,
+          req.query.limit,
+          req.query.offset
+        )
+
         await repl.send({
-          data,
+          results: data.results,
+          meta,
         })
-        pagination(data.count, req.query.limit, req.query.offset)
       } catch (e) {
         fastify.log.error(e)
       }
