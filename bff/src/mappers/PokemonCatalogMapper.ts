@@ -1,12 +1,6 @@
 import { PaginationSchemaType } from '~/plugins/routes/pokemon/pokemonCatalogRoute'
 
-export class PokemonMapper {
-  static test = (pokemons: any) => {
-    return {
-
-    }
-  }
-
+export class PokemonCatalogMapper {
   static mapPaginationToFrontend = (
     count: number,
     limit: number,
