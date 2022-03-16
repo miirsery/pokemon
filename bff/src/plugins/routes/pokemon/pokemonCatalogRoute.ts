@@ -1,22 +1,12 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
-import { PokemonCatalogMapper } from '../../../mappers/PokemonCatalogMapper'
+import {
+  PokemonCatalogMapper
+} from '../../../mappers/PokemonCatalogMapper'
 
 const PaginationSchema = Type.Object({
   totalPages: Type.Number(),
-  currentPage: Type.Number()
-})
-export type PaginationSchemaType = Static<typeof PaginationSchema>
-
-const ResponseSchema = Type.Object({
-  results: Type.Array(
-    Type.Object({
-      name: Type.String(),
-      url: Type.String(),
-      totalPages: Type.Optional(Type.Number())
-    })
-  ),
-  meta: PaginationSchema,
+  currentPage: Type.Number(),
 })
 
 const QueryParameterSchema = Type.Object({
@@ -24,8 +14,26 @@ const QueryParameterSchema = Type.Object({
   offset: Type.Number()
 })
 
+const DetailedPokemonSchema = Type.Object({
+  image: Type.String(),
+  urL: Type.String(),
+  id: Type.Number(),
+  name: Type.String(),
+  abilities: Type.Array(Type.String())
+})
+
+const FinallySchema = Type.Object({
+  meta: PaginationSchema,
+  pokemonList: Type.Array(DetailedPokemonSchema),
+  totalPages: Type.Optional(Type.Number()),
+  success: Type.Boolean(),
+})
+
+export type PaginationSchemaType = Static<typeof PaginationSchema>
 export type QueryParameterSchemaType = Static<typeof QueryParameterSchema>
-export type ResponseSchemaType = Static<typeof ResponseSchema>
+export type DetailedPokemonSchemaType = Static<typeof DetailedPokemonSchema>
+
+type ResponseSchemaType = Static<typeof FinallySchema>
 
 const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
@@ -36,7 +44,7 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
     {
       schema: {
         response: {
-          200: ResponseSchema,
+          200: FinallySchema,
         },
       }
     },
@@ -47,6 +55,19 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
             ...req.query,
           }
         })
+
+        let pokemonList: any = []
+        for (const item of data.results) {
+          const { data } = await fastify.axios.get(item.url)
+          pokemonList.push(PokemonCatalogMapper.mapDetailedCatalogToFrontend(
+            item.url,
+            data.sprites.other['official-artwork'].front_default,
+            data.id,
+            data.name,
+            data.abilities
+          ))
+        }
+
         const meta = PokemonCatalogMapper.mapPaginationToFrontend(
           data.count,
           req.query.limit,
@@ -54,11 +75,15 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
         )
 
         await repl.send({
-          results: data.results,
+          pokemonList,
           meta,
+          success: true
         })
       } catch (e) {
         fastify.log.error(e)
+        repl.send({
+          success: false
+        })
       }
     }
   )
