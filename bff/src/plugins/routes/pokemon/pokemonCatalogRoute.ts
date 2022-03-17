@@ -22,18 +22,22 @@ const DetailedPokemonSchema = Type.Object({
   abilities: Type.Array(Type.String())
 })
 
-const FinallySchema = Type.Object({
+const ResponseSchema = Type.Object({
   meta: PaginationSchema,
   pokemonList: Type.Array(DetailedPokemonSchema),
   totalPages: Type.Optional(Type.Number()),
   success: Type.Boolean(),
 })
 
+type PokemonListType = {
+  [index: string]: string
+}
+
 export type PaginationSchemaType = Static<typeof PaginationSchema>
 export type QueryParameterSchemaType = Static<typeof QueryParameterSchema>
 export type DetailedPokemonSchemaType = Static<typeof DetailedPokemonSchema>
 
-type ResponseSchemaType = Static<typeof FinallySchema>
+type ResponseSchemaType = Static<typeof ResponseSchema>
 
 const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
@@ -44,7 +48,7 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
     {
       schema: {
         response: {
-          200: FinallySchema,
+          200: ResponseSchema,
         },
       }
     },
