@@ -2,27 +2,26 @@
   <div class="pokemon">
     <div class="pokemon__wrapper">
       <router-link
-        :to="{ name: 'pokemonDetailed', params: { id: 1 } }"
+        :to="{
+          name: 'pokemonDetailed',
+          params: { id, img, name, types },
+        }"
         class="catalog__item-read"
       >
         <div class="pokemon__img">
-          <img
-            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-            alt="pokemon"
-          />
+          <img :src="img" :alt="name" />
         </div>
       </router-link>
       <div class="pokemon__info">
         <p class="pokemon__info-title subtitle">
-          Pikachu
-          <span>#001</span>
+          {{ name }}
+          <span>#00{{ id }}</span>
         </p>
-        <p class="pokemon__info-description">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur
-          debitis, ea eius fuga maiores nemo ut. A alias cupiditate doloribus
-          ipsum laborum minus mollitia voluptatem! Dolorum laborum quia repellat
-          reprehenderit.
-        </p>
+        <div class="pokemon__abilities">
+          <p v-for="ability in types">
+            {{ ability.name }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -30,14 +29,34 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'Pokemon',
+  props: {
+    name: String,
+    id: Number,
+    img: String,
+    types: Array,
+  },
 })
 </script>
 
 <style scoped lang="scss">
 .pokemon {
+  &__abilities {
+    display: flex;
+    align-content: center;
+
+    p {
+      padding: 8px 12px;
+      color: #fff;
+      background-color: #247201;
+
+      &:first-child {
+        margin-right: 1rem;
+      }
+    }
+  }
+
   &__wrapper {
     display: flex;
     width: 100%;

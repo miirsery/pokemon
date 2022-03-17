@@ -9,6 +9,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/pokemon/:id',
     name: 'pokemonDetailed',
+    props: true,
     component: () => import('@/pages/pokemonDetailed.vue'),
   },
   {
