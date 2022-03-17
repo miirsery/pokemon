@@ -29,10 +29,6 @@ const ResponseSchema = Type.Object({
   success: Type.Boolean(),
 })
 
-type PokemonListType = {
-  [index: string]: string
-}
-
 export type PaginationSchemaType = Static<typeof PaginationSchema>
 export type QueryParameterSchemaType = Static<typeof QueryParameterSchema>
 export type DetailedPokemonSchemaType = Static<typeof DetailedPokemonSchema>
