@@ -1,0 +1,16 @@
+@use 'sass:math'
+
+@mixin font($font-size, $line-height)
+    font-size: $font-size
+    line-height: math.div($line-height, $font-size)
+
+@mixin centering()
+    position: absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+
+@mixin pseudo-element($content: '', $display: block, $pos: absolute)
+    content: $content
+    display: $display
+    position: $pos

@@ -1,5 +1,7 @@
 <template>
-  <div>Preset</div>
+  <div>
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">
