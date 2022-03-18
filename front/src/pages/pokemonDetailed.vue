@@ -20,9 +20,6 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'pokemonDetailed',
   props: ['id', 'img', 'name', 'types'],
-  setup() {
-    return {}
-  },
 })
 </script>
 

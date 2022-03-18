@@ -13,13 +13,13 @@
         </div>
       </router-link>
       <div class="pokemon__info">
+        <p class="pokemon__info-id subtitle">#00{{ id }}</p>
         <p class="pokemon__info-title subtitle">
           {{ name }}
-          <span>#00{{ id }}</span>
         </p>
-        <div class="pokemon__abilities">
-          <p v-for="ability in types">
-            {{ ability.name }}
+        <div class="pokemon__types">
+          <p v-for="type in types">
+            {{ type }}
           </p>
         </div>
       </div>
@@ -37,37 +37,55 @@ export default defineComponent({
     img: String,
     types: Array,
   },
+  setup() {
+    return {}
+  },
 })
 </script>
 
 <style scoped lang="scss">
 .pokemon {
-  &__abilities {
+  &__types {
     display: flex;
     align-content: center;
 
     p {
-      padding: 8px 12px;
+      margin-right: 0.3rem;
+      border-radius: 5px;
+      padding: 4px;
+      width: 33%;
+      font-size: 12px;
+      text-align: center;
       color: #fff;
-      background-color: #247201;
-
-      &:first-child {
-        margin-right: 1rem;
-      }
+      background-color: #417b3c;
     }
   }
 
   &__wrapper {
     display: flex;
+    flex-direction: column;
     width: 100%;
   }
 
   &__info {
-    max-width: 60%;
+    padding: 0 0.5rem;
+    text-transform: capitalize;
+
+    &-id {
+      margin: 0.3rem 0 1rem;
+      font-size: 0.9rem;
+      color: #b9b9b9;
+    }
+
+    &-title {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
   }
 
   &__img {
-    max-width: 200px;
+    width: 100%;
+    background-color: rgba(200, 200, 200, 0.44);
 
     img {
       width: 100%;

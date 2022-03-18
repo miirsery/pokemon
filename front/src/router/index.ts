@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/pokemon',
+    path: '/',
     name: 'pokemonCatalog',
     component: () => import('@/pages/pokemonCatalog.vue'),
   },
