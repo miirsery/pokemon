@@ -10,6 +10,21 @@ module.exports = {
           test: /\.svg$/,
           loader: 'svg-sprite-loader',
         },
+        {
+          test: /\.scss$/,
+          use: [
+            'sass-loader',
+            {
+              loader: 'style-resources-loader',
+              options: {
+                patterns: [
+                  './src/styles/variables.scss',
+                  './src/styles/mixins.scss',
+                ],
+              },
+            },
+          ],
+        },
       ],
     },
     plugins: [

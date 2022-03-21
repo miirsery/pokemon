@@ -4,7 +4,7 @@
       <router-link
         :to="{
           name: 'pokemonDetailed',
-          params: { id, img, name, types },
+          params: { id },
         }"
         class="catalog__item-read"
       >
@@ -84,6 +84,7 @@ export default defineComponent({
   }
 
   &__img {
+    border-radius: 10px;
     width: 100%;
     background-color: rgba(200, 200, 200, 0.44);
 

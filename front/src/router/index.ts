@@ -12,11 +12,6 @@ const routes: Array<RouteRecordRaw> = [
     props: true,
     component: () => import('@/pages/pokemonDetailed.vue'),
   },
-  {
-    path: '/:PathMatch(.*)*',
-    name: 'errorPage',
-    component: () => import('@/pages/error.vue'),
-  },
 ]
 
 const router = createRouter({

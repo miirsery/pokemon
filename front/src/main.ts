@@ -4,7 +4,7 @@ import router from './router'
 import IconTemplate from '@/components/IconTemplate.vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import '@/styles/vendor/main.scss'
+import '@/styles/main.scss'
 
 const app = createApp(App)
 app.use(router).mount('#app')

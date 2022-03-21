@@ -1,21 +1,13 @@
 <template>
-  <div class="catalog">
-    <div class="catalog__container catalog__wrapper">
-      <div class="catalog__top">
-        <h2 class="catalog__title heading-title">Каталог покемонов</h2>
-        <div class="catalog__filters">
-          <select>
-            <option value="numberIncrease">Номера по возрастанию</option>
-            <option value="numberDecrease">Номера по убыванию</option>
-            <option value="letterIncrease">А-Я</option>
-            <option value="letterDecrease">Я-А</option>
-          </select>
-        </div>
+  <div class="pokemon-catalog">
+    <div class="pokemon-catalog__container pokemon-catalog__wrapper">
+      <div class="pokemon-catalog__top">
+        <h2 class="pokemon-catalog__title heading-title">Каталог покемонов</h2>
       </div>
-      <div class="catalog__content">
-        <div class="catalog__items">
+      <div class="pokemon-catalog__content">
+        <div class="pokemon-catalog__items">
           <div
-            class="catalog__item"
+            class="pokemon-catalog__item"
             v-for="pokemon in pokemons[0].pokemonList"
             :key="pokemon.name"
           >
@@ -24,21 +16,20 @@
               :id="pokemon.id"
               :img="pokemon.image"
               :types="pokemon.types"
-              class="catalog__pokemon"
+              class="pokemon-catalog__pokemon"
             />
           </div>
         </div>
       </div>
       <el-pagination
         v-model:current-page="currentPage"
-        v-model:page-size="pokemons[0].meta.limit"
         small
         background
         layout="prev, pager, next"
         :total="pokemons[0].meta.totalPages * 10"
         @sizeChange="handleSizeChange"
-        @current-change="handleCurrentChange"
-        class="catalog__pagination mt-4"
+        @current-change="handleChangeCurrentPage"
+        class="pokemon-catalog__pagination mt-4"
       />
     </div>
   </div>
@@ -49,15 +40,19 @@ import { defineComponent, ref } from 'vue'
 import Pokemon from '@/components/Pokemon.vue'
 
 export default defineComponent({
-  name: 'pokemonCatalog',
+  name: 'pokemonpokemon-catalog',
   components: {
     Pokemon,
   },
   setup() {
+    const showSidebar = ref(false)
+    const toggleSidebar = () => {
+      showSidebar.value = !showSidebar.value
+    }
+
     type MetaType = {
       totalPages: number
       currentPage: number
-      limit: number
     }
     type PokemonList = {
       id: number
@@ -67,17 +62,16 @@ export default defineComponent({
       types: Array<string>
     }
 
-    interface IPokemon {
+    type Pokemon = {
       meta: MetaType
       pokemonList: PokemonList[]
     }
 
-    const pokemons: IPokemon[] = [
+    const pokemons: Pokemon[] = [
       {
         meta: {
           totalPages: 113,
           currentPage: 3,
-          limit: 10,
         },
         pokemonList: [
           {
@@ -166,27 +160,26 @@ export default defineComponent({
     const currentPage = ref(pokemons[0].meta.currentPage)
 
     const handleSizeChange = (val: number) => {
-      currentPage.value = 1
-      console.log(val)
+      currentPage.value = val
     }
 
-    function handleCurrentChange(val: number) {
+    function handleChangeCurrentPage(val: number) {
       currentPage.value = val
-      // axios.get('localhost:3000/api/pokemon', { params: page: `${val}`})
-      console.log(val)
     }
+
     return {
       pokemons,
       currentPage,
-      handleCurrentChange,
+      handleChangeCurrentPage,
       handleSizeChange,
+      toggleSidebar,
     }
   },
 })
 </script>
 
 <style scoped lang="scss">
-.catalog {
+.pokemon-catalog {
   &__top {
     display: flex;
     justify-content: space-between;
@@ -205,6 +198,7 @@ export default defineComponent({
   }
 
   &__content {
+    position: relative;
     background-color: #fff;
   }
 
