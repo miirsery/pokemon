@@ -11,7 +11,7 @@
         <li class="pokemon-header__item">
           <div class="pokemon-header__item-random-pokemon">
             <button
-              title="All pokemon"
+              title="Random pokemon"
               class="pokemon-header__item-profile--img"
             >
               <img

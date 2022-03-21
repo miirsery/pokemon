@@ -7,7 +7,7 @@
       <div class="pokemon-detailed-info">
         <h2 class="pokemon-detailed__title subtitle">
           name
-          <span>id</span>
+          <span>{{ id }}</span>
         </h2>
       </div>
     </div>

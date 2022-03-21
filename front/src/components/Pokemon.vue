@@ -13,7 +13,7 @@
         </div>
       </router-link>
       <div class="pokemon__info">
-        <p class="pokemon__info-id subtitle">#00{{ id }}</p>
+        <p class="pokemon__info-id subtitle">{{ id }}</p>
         <p class="pokemon__info-title subtitle">
           {{ name }}
         </p>
