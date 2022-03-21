@@ -14,6 +14,18 @@
           <router-link class="footer__item--link" to="/">FAQ</router-link>
         </li>
       </ul>
+      <ul class="footer__right-menu footer__menu">
+        <li class="footer__right-menu-item footer__item">
+          <router-link class="footer__item--link" to="/">
+            Мы находимся здесь
+          </router-link>
+        </li>
+        <li class="footer__right-menu-item footer__item">
+          <router-link class="footer__item--link" to="/">
+            Смотреть сериал
+          </router-link>
+        </li>
+      </ul>
     </div>
   </footer>
 </template>
