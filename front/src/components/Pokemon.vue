@@ -56,8 +56,8 @@ export default defineComponent({
       width: 33%;
       font-size: 12px;
       text-align: center;
-      color: var(--color-white);
-      background-color: var(--color-accent);
+      color: $color-white;
+      background-color: $color-accent;
     }
   }
 
@@ -74,7 +74,7 @@ export default defineComponent({
     &-id {
       margin: 0.3rem 0 1rem;
       font-size: 0.9rem;
-      color: var(--color-gray);
+      color: $color-gray;
     }
 
     &-title {
@@ -86,7 +86,7 @@ export default defineComponent({
   &__img {
     border-radius: 10px;
     width: 100%;
-    background-color: var(--color-light-gray);
+    background-color: $color-light-gray;
 
     img {
       width: 100%;

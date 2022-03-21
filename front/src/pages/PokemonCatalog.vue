@@ -191,7 +191,7 @@ export default defineComponent({
   }
 
   &__content {
-    background-color: var(--color-white);
+    background-color: $color-white;
   }
 
   &__pagination {
