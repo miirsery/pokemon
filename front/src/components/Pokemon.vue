@@ -3,7 +3,7 @@
     <div class="pokemon__wrapper">
       <router-link
         :to="{
-          name: 'pokemonDetailed',
+          name: 'PokemonDetailed',
           params: { id },
         }"
         class="catalog__item-read"
@@ -56,8 +56,8 @@ export default defineComponent({
       width: 33%;
       font-size: 12px;
       text-align: center;
-      color: #fff;
-      background-color: #417b3c;
+      color: var(--color-white);
+      background-color: var(--color-accent);
     }
   }
 
@@ -74,7 +74,7 @@ export default defineComponent({
     &-id {
       margin: 0.3rem 0 1rem;
       font-size: 0.9rem;
-      color: #b9b9b9;
+      color: var(--color-gray);
     }
 
     &-title {
@@ -86,7 +86,7 @@ export default defineComponent({
   &__img {
     border-radius: 10px;
     width: 100%;
-    background-color: rgba(200, 200, 200, 0.44);
+    background-color: var(--color-light-gray);
 
     img {
       width: 100%;

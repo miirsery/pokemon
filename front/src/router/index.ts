@@ -3,14 +3,22 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'pokemonCatalog',
-    component: () => import('@/pages/pokemonCatalog.vue'),
-  },
-  {
-    path: '/pokemon/:id',
-    name: 'pokemonDetailed',
-    props: true,
-    component: () => import('@/pages/pokemonDetailed.vue'),
+    name: 'Layout',
+    component: () => import('@/layout/Layout.vue'),
+    children: [
+      {
+        path: '/',
+        name: 'PokemonCatalog',
+        props: true,
+        component: () => import('@/pages/PokemonCatalog.vue'),
+      },
+      {
+        path: '/pokemon/:id',
+        name: 'PokemonDetailed',
+        props: true,
+        component: () => import('@/pages/PokemonDetailed.vue'),
+      },
+    ],
   },
 ]
 

@@ -2,12 +2,12 @@
   <div class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <div class="pokemon-detailed__img">
-        <img :src="img" :alt="name" />
+        <img src="qwdqwd" alt="name" />
       </div>
       <div class="pokemon-detailed-info">
         <h2 class="pokemon-detailed__title subtitle">
-          {{ name }}
-          <span>{{ id }}</span>
+          name
+          <span>id</span>
         </h2>
       </div>
     </div>
@@ -18,8 +18,13 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'pokemonDetailed',
-  props: ['id'],
+  name: 'PokemonDetailed',
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+  },
 })
 </script>
 

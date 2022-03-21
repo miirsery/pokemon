@@ -40,16 +40,11 @@ import { defineComponent, ref } from 'vue'
 import Pokemon from '@/components/Pokemon.vue'
 
 export default defineComponent({
-  name: 'pokemonpokemon-catalog',
+  name: 'PokemonCatalog',
   components: {
     Pokemon,
   },
   setup() {
-    const showSidebar = ref(false)
-    const toggleSidebar = () => {
-      showSidebar.value = !showSidebar.value
-    }
-
     type MetaType = {
       totalPages: number
       currentPage: number
@@ -163,16 +158,14 @@ export default defineComponent({
       currentPage.value = val
     }
 
-    function handleChangeCurrentPage(val: number) {
+    const handleChangeCurrentPage = (val: number) => {
       currentPage.value = val
     }
-
     return {
       pokemons,
       currentPage,
       handleChangeCurrentPage,
       handleSizeChange,
-      toggleSidebar,
     }
   },
 })
@@ -198,8 +191,7 @@ export default defineComponent({
   }
 
   &__content {
-    position: relative;
-    background-color: #fff;
+    background-color: var(--color-white);
   }
 
   &__pagination {
