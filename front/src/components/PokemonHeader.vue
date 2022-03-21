@@ -3,7 +3,7 @@
     <div class="pokemon-header__wrapper pokemon-header__container">
       <div class="pokemon-header__logo">
         <router-link to="/" alt="Pokemon">
-          <img src="../assets/images/logo.png" alt="Pokemon logo" />
+          <icon-template width="40" height="40" name="logo" />
         </router-link>
       </div>
       <div class="pokemon-header__text">Pokedex</div>
@@ -14,10 +14,7 @@
               title="Random pokemon"
               class="pokemon-header__item-profile--img"
             >
-              <img
-                src="../assets/images/random-pokemon.png"
-                alt="random-pokemon"
-              />
+              <icon-template width="36" height="36" name="pokemon-random" />
             </button>
           </div>
         </li>
@@ -28,7 +25,7 @@
               title="Random pokemon"
               class="pokemon-header__item-profile--img"
             >
-              <img src="../assets/images/all-pokemon.png" alt="all-pokemon" />
+              <icon-template width="36" height="36" name="all-pokemon" />
             </router-link>
           </div>
         </li>
@@ -39,7 +36,7 @@
               title="Profile"
               class="pokemon-header__item-profile--img"
             >
-              <img src="../assets/images/profile.png" alt="profile" />
+              <icon-template width="36" height="36" name="profile" />
             </router-link>
           </div>
         </li>
@@ -49,7 +46,10 @@
 </template>
 
 <script>
-export default {}
+import IconTemplate from '@/components/IconTemplate'
+export default {
+  components: { IconTemplate },
+}
 </script>
 
 <style scoped lang="scss">
