@@ -58,6 +58,12 @@ export default defineComponent({
       text-align: center;
       color: $color-white;
       background-color: $color-accent;
+      transition: background-color 0.2s ease-out;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #228eb7;
+      }
     }
   }
 
@@ -87,11 +93,16 @@ export default defineComponent({
     border-radius: 10px;
     width: 100%;
     background-color: $color-light-gray;
+    transition: filter 0.2s ease-in;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    &:hover {
+      filter: brightness(0.9);
     }
   }
 }
