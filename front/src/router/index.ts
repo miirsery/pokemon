@@ -4,21 +4,16 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Layout',
-    component: () => import('@/layout/Layout.vue'),
-    children: [
-      {
-        path: '/',
-        name: 'PokemonCatalog',
-        props: true,
-        component: () => import('@/pages/PokemonCatalog.vue'),
-      },
-      {
-        path: '/pokemon/:id',
-        name: 'PokemonDetailed',
-        props: true,
-        component: () => import('@/pages/PokemonDetailed.vue'),
-      },
-    ],
+    components: {
+      default: () => import('@/layout/Layout.vue'),
+      PokemonCatalog: () => import('@/pages/PokemonCatalog.vue'),
+    },
+  },
+  {
+    path: '/pokemon/:id',
+    name: 'PokemonDetailed',
+    props: true,
+    component: () => import('@/pages/PokemonDetailed.vue'),
   },
 ]
 
