@@ -19,7 +19,7 @@
           </div>
         </li>
         <li class="pokemon-header__item">
-          <div class="pokemon-header__item--all-pokemon">
+          <div class="pokemon-header__item-all-pokemon">
             <router-link
               to="/"
               title="All pokemon"
@@ -30,11 +30,11 @@
           </div>
         </li>
         <li class="pokemon-header__item">
-          <div class="pokemon-header__item--profile">
+          <div class="pokemon-header__item-profile">
             <router-link
               to="/"
               title="Profile"
-              class="pokemon-header__item-profile--img"
+              class="pokemon-header__item-profile-img"
             >
               <icon-template width="36" height="36" name="profile" />
             </router-link>
