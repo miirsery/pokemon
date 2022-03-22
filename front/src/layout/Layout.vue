@@ -7,21 +7,15 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import PokemonHeader from '@/components/PokemonHeader.vue'
 import PokemonFooter from '@/components/PokemonFooter.vue'
+
 export default defineComponent({
   name: 'Layout',
   components: {
     PokemonHeader,
     PokemonFooter,
-  },
-  setup() {
-    const data = reactive({})
-
-    return {
-      ...toRefs(data),
-    }
   },
 })
 </script>
