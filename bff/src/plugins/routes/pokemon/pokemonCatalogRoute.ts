@@ -35,12 +35,14 @@ export type DetailedPokemonSchemaType = Static<typeof DetailedPokemonSchema>
 
 type ResponseSchemaType = Static<typeof ResponseSchema>
 
+
+
 const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
     Response: ResponseSchemaType,
     Querystring: QueryParameterSchemaType
   }>(
-    '/api/pokemon-catalog',
+    '/api/pokemon',
     {
       schema: {
         response: {
@@ -56,7 +58,7 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
           }
         })
 
-        let pokemonList: any = []
+        const pokemonList: DetailedPokemonSchemaType[] = []
         for (const item of data.results) {
           const { data } = await fastify.axios.get(item.url)
           pokemonList.push(PokemonCatalogMapper.mapDetailedCatalogToFrontend(

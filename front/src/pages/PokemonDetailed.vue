@@ -2,7 +2,7 @@
   <div class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <div class="pokemon-detailed__img">
-        <img src="qwdqwd" alt="name" />
+        <img :src="img" :alt="name" />
       </div>
       <div class="pokemon-detailed-info">
         <h2 class="pokemon-detailed__title subtitle">

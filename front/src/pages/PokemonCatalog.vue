@@ -54,7 +54,7 @@ export default defineComponent({
       name: string
       image: string
       url: string
-      types: Array<string>
+      types: string[]
     }
 
     type Pokemon = {
@@ -191,7 +191,7 @@ export default defineComponent({
   }
 
   &__content {
-    background-color: $color-white;
+    background-color: $color-background;
   }
 
   &__pagination {
