@@ -1,0 +1,47 @@
+html {
+  height: 100%;
+  font-size: 16px;
+}
+
+body {
+  height: 100%;
+  font-weight: 400;
+  color: #000;
+  background-color: #fff;
+}
+
+a {
+  color: #000;
+}
+
+input,
+button {
+  display: block;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+[class*='container'] {
+  margin: 0 auto;
+  padding: 0 15px;
+  max-width: 1360px;
+}
+
+.main {
+  position: relative;
+  flex: 1 0 auto;
+}
+
+[class*='heading-title'] {
+  font-size: clamp(18px, 4vw, 36px);
+  line-height: 1.1;
+}
+
+[class*='subtitle'] {
+  font-size: clamp(14px, 4vw, 24px);
+  line-height: 0.9;
+}
