@@ -12,7 +12,7 @@
           <div class="pokemon-header__item-random-pokemon">
             <button
               title="Random pokemon"
-              class="pokemon-header__item-profile--img"
+              class="pokemon-header__item-profile-img"
             >
               <icon-template width="36" height="36" name="pokemon-random" />
             </button>
@@ -22,8 +22,8 @@
           <div class="pokemon-header__item--all-pokemon">
             <router-link
               to="/"
-              title="Random pokemon"
-              class="pokemon-header__item-profile--img"
+              title="All pokemon"
+              class="pokemon-header__item-profile-img"
             >
               <icon-template width="36" height="36" name="all-pokemon" />
             </router-link>
@@ -46,22 +46,25 @@
 </template>
 
 <script>
-import IconTemplate from '@/components/IconTemplate'
-export default {
-  components: { IconTemplate },
-}
+export default {}
 </script>
 
 <style scoped lang="scss">
 .pokemon-header {
-  padding: 1rem 0;
-
   &__wrapper {
+    position: relative;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    height: 70px;
+    background: center/ cover no-repeat url('../assets/images/header-bg.png');
   }
 
   &__text {
+    margin-top: 1rem;
+    margin-left: 3rem;
     font-weight: 300;
     font-size: 36px;
   }

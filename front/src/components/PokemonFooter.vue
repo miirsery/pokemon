@@ -4,29 +4,29 @@
       <div class="pokemon-footer__menu">
         <ul class="pokemon-footer__left-menu pokemon-footer__menu">
           <li class="pokemon-footer__right-menu-item pokemon-footer__item">
-            <router-link class="pokemon-footer__item--link" to="/">
+            <router-link class="pokemon-footer__item-link" to="/">
               О нас
             </router-link>
           </li>
           <li class="pokemon-footer__right-menu-item pokemon-footer__item">
-            <router-link class="pokemon-footer__item--link" to="/">
+            <router-link class="pokemon-footer__item-link" to="/">
               Все покемоны
             </router-link>
           </li>
           <li class="pokemon-footer__right-menu-item pokemon-footer__item">
-            <router-link class="pokemon-footer__item--link" to="/">
+            <router-link class="pokemon-footer__item-link" to="/">
               FAQ
             </router-link>
           </li>
         </ul>
         <ul class="pokemon-footer__right-menu pokemon-footer__menu">
           <li class="pokemon-footer__right-menu-item pokemon-footer__item">
-            <router-link class="pokemon-footer__item--link" to="/">
+            <router-link class="pokemon-footer__item-link" to="/">
               Мы находимся здесь
             </router-link>
           </li>
           <li class="pokemon-footer__right-menu-item pokemon-footer__item">
-            <router-link class="pokemon-footer__item--link" to="/">
+            <router-link class="pokemon-footer__item-link" to="/">
               Смотреть сериал
             </router-link>
           </li>
@@ -57,14 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import IconTemplate from '@/components/IconTemplate.vue'
-
-export default defineComponent({
-  components: {
-    IconTemplate,
-  },
-})
+export default {}
 </script>
 
 <style scoped lang="scss">
@@ -98,7 +91,7 @@ export default defineComponent({
     margin: 8px 0;
   }
 
-  &__item--link {
+  &__item-link {
     text-decoration: none;
     color: #dedede;
 
