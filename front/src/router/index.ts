@@ -4,10 +4,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Layout',
-    components: {
-      default: () => import('@/layout/Layout.vue'),
-      PokemonCatalog: () => import('@/pages/PokemonCatalog.vue'),
-    },
+    redirect: { name: 'PokemonCatalog' },
+  },
+  {
+    path: '/pokemon',
+    name: 'PokemonCatalog',
+    component: () => import('@/pages/PokemonCatalog.vue'),
   },
   {
     path: '/pokemon/:id',
