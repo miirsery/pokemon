@@ -11,7 +11,7 @@
             v-for="pokemon in pokemons[0].pokemonList"
             :key="pokemon.name"
           >
-            <pokemon
+            <pokemon-card
               :name="pokemon.name"
               :id="pokemon.id"
               :img="pokemon.image"
@@ -37,12 +37,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import Pokemon from '@/components/Pokemon.vue'
+import PokemonCard from '@/components/PokemonCard.vue'
 
 export default defineComponent({
   name: 'PokemonCatalog',
   components: {
-    Pokemon,
+    PokemonCard,
   },
   setup() {
     type MetaType = {
