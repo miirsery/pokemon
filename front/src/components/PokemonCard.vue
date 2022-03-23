@@ -1,6 +1,6 @@
 <template>
-  <div class="pokemon">
-    <div class="pokemon__wrapper">
+  <div class="pokemon-card">
+    <div class="pokemon-card__wrapper">
       <router-link
         :to="{
           name: 'PokemonDetailed',
@@ -8,16 +8,16 @@
         }"
         class="catalog__item-read"
       >
-        <div class="pokemon__img">
+        <div class="pokemon-card__img">
           <img :src="img" :alt="name" />
         </div>
       </router-link>
-      <div class="pokemon__info">
-        <p class="pokemon__info-id subtitle">{{ id }}</p>
-        <p class="pokemon__info-title subtitle">
+      <div class="pokemon-card__info">
+        <p class="pokemon-card__info-id subtitle">{{ id }}</p>
+        <p class="pokemon-card__info-title subtitle">
           {{ name }}
         </p>
-        <div class="pokemon__types">
+        <div class="pokemon-card__types">
           <p v-for="type in types">
             {{ type }}
           </p>
@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'Pokemon',
+  name: 'PokemonCard',
   props: {
     name: String,
     id: Number,
@@ -44,7 +44,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.pokemon {
+.pokemon-card {
   &__types {
     display: flex;
     align-content: center;
@@ -84,7 +84,7 @@ export default defineComponent({
     }
 
     &-title {
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
       font-weight: 700;
     }
   }

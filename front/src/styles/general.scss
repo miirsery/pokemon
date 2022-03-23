@@ -7,16 +7,20 @@ body {
   height: 100%;
   font-weight: 400;
   color: #000;
-  background-color: #fff;
+  background: center/ cover no-repeat url('../assets/images/bg.png');
 }
 
 a {
-  color: #000;
+  color: $color-white;
 }
 
 input,
 button {
   display: block;
+}
+
+button {
+  cursor: pointer;
 }
 
 #app {
