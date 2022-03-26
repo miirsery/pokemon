@@ -4,7 +4,7 @@
       <div class="pokemon-detailed__img">
         <img :src="img" :alt="name" />
       </div>
-      <div class="pokemon-detailed-info">
+      <div class="pokemon-detailed__info">
         <h2 class="pokemon-detailed__title subtitle">
           name
           <span>{{ id }}</span>
@@ -27,9 +27,9 @@ export default defineComponent({
   },
   setup() {
     const pokemon = {
-      id: 35,
+      id: 37,
       name: 'Pokemon',
-      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/35.png',
+      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/37.png',
     }
 
     const currentPokemon = {

@@ -6,21 +6,25 @@
         <h3 class="pokemon-sidebar__title">Последнее просмотренное</h3>
       </div>
       <ul class="pokemon-sidebar__menu">
-        <li
+        <router-link
           class="pokemon-sidebar__item"
           v-for="pokemon in filteredListValues"
           :key="pokemon.name"
+          :to="{ name: 'PokemonDetailed', params: { id: pokemon.id } }"
+          @click="this.$emit('close')"
         >
           <div class="pokemon-sidebar__item-img">
             <img :src="pokemon.img" :alt="pokemon.name" />
           </div>
           <div class="pokemon__info">
-            <p class="pokemon__info-id subtitle">{{ pokemon.id }}</p>
+            <p class="pokemon__info-id subtitle">№{{ pokemon.id }}</p>
             <p class="pokemon__info-title subtitle">{{ pokemon.name }}</p>
           </div>
-        </li>
+        </router-link>
       </ul>
-      <button @click="clearPokemonList">CLear</button>
+      <button class="pokemon-sidebar__clear" @click="clearPokemonList">
+        Отчистить
+      </button>
     </div>
   </aside>
 </template>
@@ -69,6 +73,7 @@ button {
   top: 0;
   bottom: 0;
   z-index: 100;
+  padding: 10px;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
@@ -79,9 +84,10 @@ button {
     top: 50%;
     z-index: 120;
     overflow: auto;
+    border-radius: 10px;
     width: 350px;
     max-height: 650px;
-    background-color: #d5d5d5;
+    background-color: rgba(210, 206, 206, 0.98);
     transform: translateY(-50%);
     transition: scrollbar-color 0.3s ease-out;
 
@@ -128,15 +134,37 @@ button {
     margin-bottom: 1rem;
     border-bottom: 1px solid #fff;
     padding: 15px;
+    color: $color-dark-gray;
 
     &-img {
-      width: 50%;
+      margin-right: 2rem;
+      width: 140px;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
+    }
+
+    &:last-child {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__clear {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+  }
+}
+
+.pokemon {
+  &__info {
+    &-id {
+      font-weight: 300;
+      font-size: 1rem;
+      color: $color-dark-gray;
     }
   }
 }

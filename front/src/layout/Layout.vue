@@ -23,6 +23,7 @@ export default defineComponent({
   setup() {
     const showSidebar = ref(false)
     const toggleSidebar = () => (showSidebar.value = !showSidebar.value)
+
     return {
       toggleSidebar,
       showSidebar,
