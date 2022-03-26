@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 
 export default defineComponent({
   name: 'PokemonDetailed',
@@ -24,6 +24,40 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+  },
+  setup() {
+    const pokemon = {
+      id: 35,
+      name: 'Pokemon',
+      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/35.png',
+    }
+
+    const currentPokemon = {
+      pokemon: {
+        id: pokemon.id,
+        name: pokemon.name,
+        img: pokemon.img,
+      },
+    }
+
+    let oldPokemonList = JSON.parse(localStorage.getItem('pokemon'))
+
+    onMounted(() => {
+      if (oldPokemonList) {
+        oldPokemonList[`pokemon-${pokemon.id}`] = currentPokemon.pokemon
+        localStorage.setItem('pokemon', JSON.stringify(oldPokemonList))
+
+        if (Object.keys(oldPokemonList).length >= 6) {
+          let newList = Object.values(oldPokemonList)
+          newList.shift()
+          localStorage.setItem(`pokemon`, JSON.stringify(newList))
+        }
+      } else {
+        currentPokemon[`pokemon-${pokemon.id}`] = currentPokemon.pokemon
+        delete currentPokemon['pokemon']
+        localStorage.setItem(`pokemon`, JSON.stringify(currentPokemon))
+      }
+    })
   },
 })
 </script>
