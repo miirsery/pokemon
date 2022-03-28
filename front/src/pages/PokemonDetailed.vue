@@ -246,8 +246,8 @@ export default defineComponent({
     &-title {
       margin-bottom: 0.5rem;
       margin-left: 1rem;
-      font-weight: 700;
-      font-size: 1.4gitrem;
+      font-weight: 700;git
+      font-size: 1.4rem;
       color: $color-dark-gray;
     }
 
