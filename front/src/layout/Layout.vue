@@ -21,9 +21,4 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-#app {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 </style>

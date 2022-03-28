@@ -103,6 +103,46 @@
             </li>
           </ul>
         </div>
+        <div class="pokemon-detailed__evolution">
+          <h2 class="pokemon-detailed__evolution-title subtitle">
+            Стадии эволюции
+          </h2>
+          <div class="pokemon-detailed__evolution-items">
+            <div class="pokemon-detailed__evolution-item">
+              <div class="pokemon-detailed__evolution-item__img">
+                <img :src="pokemon.url" alt="pokemon" />
+              </div>
+              <h3 class="pokemon-detailed__evolution-item__title">
+                Wigglytuff
+                <span class="pokemon-detailed__evolution-item__title-id">
+                  №0040
+                </span>
+              </h3>
+            </div>
+            <div class="pokemon-detailed__evolution-item">
+              <div class="pokemon-detailed__evolution-item__img">
+                <img :src="pokemon.url" alt="pokemon" />
+              </div>
+              <h3 class="pokemon-detailed__evolution-item__title">
+                Wigglytuff
+                <span class="pokemon-detailed__evolution-item__title-id">
+                  №0040
+                </span>
+              </h3>
+            </div>
+            <div class="pokemon-detailed__evolution-item">
+              <div class="pokemon-detailed__evolution-item__img">
+                <img :src="pokemon.url" alt="pokemon" />
+              </div>
+              <h3 class="pokemon-detailed__evolution-item__title">
+                Wigglytuff
+                <span class="pokemon-detailed__evolution-item__title-id">
+                  №0040
+                </span>
+              </h3>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -168,6 +208,9 @@ export default defineComponent({
   }
 
   &__content {
+    padding: 0 30px;
+    background-color: $color-white;
+
     &-right {
       width: 100%;
       height: 100%;
@@ -177,7 +220,6 @@ export default defineComponent({
       display: flex;
       margin-bottom: 2rem;
       padding: 15px;
-      background-color: $color-white;
     }
   }
 
@@ -246,7 +288,7 @@ export default defineComponent({
     &-title {
       margin-bottom: 0.5rem;
       margin-left: 1rem;
-      font-weight: 700;git
+      font-weight: 700;
       font-size: 1.4rem;
       color: $color-dark-gray;
     }
@@ -277,7 +319,7 @@ export default defineComponent({
         }
       }
 
-      &:nth-child(7) {
+      &:nth-child(5) {
         .pokemon-detailed__stats-gauge .pokemon-detailed__stats-gauge__meter {
           top: 10%;
         }
@@ -307,6 +349,80 @@ export default defineComponent({
         width: 100%;
         height: 100%;
         background: $color-accent;
+      }
+    }
+  }
+
+  &__evolution {
+    position: relative;
+    margin: 2rem auto;
+    border-radius: 10px;
+    padding: 10px 15px;
+    height: 301px;
+    max-width: 80%;
+    background: center/ cover url('../assets/images/evolution-bg.png');
+
+    &::after {
+      content: ' ';
+      position: absolute;
+      left: -1px;
+      bottom: -1px;
+      z-index: 3;
+      width: 2em;
+      height: 2em;
+      background: center/ cover no-repeat url('../assets/images/cut-corner.png');
+      backface-visibility: hidden;
+      transform: rotate(-90deg);
+    }
+
+    &-title {
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: $color-white;
+    }
+
+    &-items {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 100%;
+    }
+
+    &-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &__img {
+        position: relative;
+        margin-bottom: 1rem;
+        border: 5px solid $color-white;
+        border-radius: 50%;
+        width: 160px;
+        height: 160px;
+        box-shadow: -2px 6px 15px $color-dark-gray;
+        background-color: $color-medium-gray;
+
+        img {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 80%;
+          height: 80%;
+          object-fit: cover;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      &__title {
+        font-size: 1.1rem;
+        color: $color-white;
+
+        &-id {
+          font-size: 0.8rem;
+          color: $color-gray;
+        }
       }
     }
   }
