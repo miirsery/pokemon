@@ -3,7 +3,7 @@
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
         wigglytuff
-        <span>№0040</span>
+        <pokemon-id :id="pokemon.id" />
       </h2>
       <div class="pokemon-detailed__content">
         <div class="pokemon-detailed__content-main">
@@ -52,8 +52,12 @@
                 </div>
                 <div class="pokemon-detailed__info-item">
                   <h4 class="pokemon-detailed__info-item__title">Abilities</h4>
-                  <p class="pokemon-detailed__info-item__value">Cute Charm</p>
-                  <p class="pokemon-detailed__info-item__value">Competitive</p>
+                  <p class="pokemon-detailed__info-item__value ability">
+                    Cute Charm
+                  </p>
+                  <p class="pokemon-detailed__info-item__value ability">
+                    Competitive
+                  </p>
                 </div>
               </div>
             </div>
@@ -96,7 +100,7 @@
                 <li
                   class="pokemon-detailed__stats-gauge__item"
                   v-for="(li_item, li_index) in 15"
-                  :key="index"
+                  :key="li_index"
                 ></li>
               </ul>
               <span>HP</span>
@@ -116,7 +120,7 @@
                 <h3 class="pokemon-detailed__evolution-item__title">
                   Wigglytuff
                   <span class="pokemon-detailed__evolution-item__title-id">
-                    №0040
+                    <pokemon-id :id="pokemon.id" />
                   </span>
                 </h3>
               </router-link>
@@ -138,7 +142,7 @@
                 <h3 class="pokemon-detailed__evolution-item__title">
                   Wigglytuff
                   <span class="pokemon-detailed__evolution-item__title-id">
-                    №0040
+                    <pokemon-id :id="pokemon.id" />
                   </span>
                 </h3>
               </router-link>
@@ -160,7 +164,7 @@
                 <h3 class="pokemon-detailed__evolution-item__title">
                   Wigglytuff
                   <span class="pokemon-detailed__evolution-item__title-id">
-                    №0040
+                    <pokemon-id :id="pokemon.id" />
                   </span>
                 </h3>
               </router-link>
@@ -183,14 +187,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import IconTemplate from '@/components/IconTemplate.vue'
+import PokemonId from '@/components/PokemonId.vue'
 
 export default defineComponent({
-  name: 'pokemonDetailed',
-  components: { IconTemplate },
+  name: 'PokemonDetailed',
+  components: {
+    PokemonId,
+  },
   setup() {
     return {
       pokemon: {
+        id: 444,
         url: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
       },
     }
@@ -207,10 +214,6 @@ export default defineComponent({
     font-size: clamp(18px, 4vw, 36px);
     text-align: center;
     text-transform: capitalize;
-
-    span {
-      color: #878787;
-    }
   }
 
   &__img {
@@ -241,7 +244,7 @@ export default defineComponent({
   }
 
   &__content {
-    padding: 0 30px;
+    padding: 2rem;
     background-color: $color-white;
 
     &-right {
@@ -267,11 +270,33 @@ export default defineComponent({
     }
 
     &__value {
-      font-weight: 500;
+      position: relative;
+      font-weight: 600;
+      font-size: 1.1rem;
       color: $color-dark-gray;
 
       span:first-child {
         margin-right: 10px;
+      }
+    }
+
+    .ability {
+      position: relative;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+
+      &::after {
+        content: '?';
+        position: absolute;
+        right: -28px;
+        top: 50%;
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        text-align: center;
+        color: $color-accent;
+        background-color: #e8e8e8;
+        transform: translateY(-50%);
       }
     }
   }
@@ -506,7 +531,7 @@ export default defineComponent({
 
         &:hover {
           color: $color-light-gray;
-          background-color: #2f81a2;
+          background-color: $color-dark-accent;
         }
 
         &:first-child {

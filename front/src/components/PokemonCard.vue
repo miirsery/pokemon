@@ -13,7 +13,9 @@
         </div>
       </router-link>
       <div class="pokemon-card__info">
-        <p class="pokemon-card__info-id subtitle">{{ id }}</p>
+        <div class="pokemon-card__info-id subtitle">
+          <pokemon-id :id="id" />
+        </div>
         <p class="pokemon-card__info-title subtitle">
           {{ name }}
         </p>
@@ -29,8 +31,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import PokemonId from '@/components/PokemonId.vue'
 export default defineComponent({
   name: 'PokemonCard',
+  components: { PokemonId },
   props: {
     name: String,
     id: Number,
