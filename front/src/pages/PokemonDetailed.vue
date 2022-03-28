@@ -109,37 +109,70 @@
           </h2>
           <div class="pokemon-detailed__evolution-items">
             <div class="pokemon-detailed__evolution-item">
-              <div class="pokemon-detailed__evolution-item__img">
-                <img :src="pokemon.url" alt="pokemon" />
+              <router-link to="#">
+                <div class="pokemon-detailed__evolution-item__img">
+                  <img :src="pokemon.url" alt="pokemon" />
+                </div>
+                <h3 class="pokemon-detailed__evolution-item__title">
+                  Wigglytuff
+                  <span class="pokemon-detailed__evolution-item__title-id">
+                    №0040
+                  </span>
+                </h3>
+              </router-link>
+
+              <div class="pokemon-detailed__evolution-item__types">
+                <div class="pokemon-detailed__evolution-item__type">
+                  <router-link to="#">Grass</router-link>
+                </div>
+                <div class="pokemon-detailed__evolution-item__type">
+                  <router-link to="#">Poison</router-link>
+                </div>
               </div>
-              <h3 class="pokemon-detailed__evolution-item__title">
-                Wigglytuff
-                <span class="pokemon-detailed__evolution-item__title-id">
-                  №0040
-                </span>
-              </h3>
             </div>
             <div class="pokemon-detailed__evolution-item">
-              <div class="pokemon-detailed__evolution-item__img">
-                <img :src="pokemon.url" alt="pokemon" />
+              <router-link to="#">
+                <div class="pokemon-detailed__evolution-item__img">
+                  <img :src="pokemon.url" alt="pokemon" />
+                </div>
+                <h3 class="pokemon-detailed__evolution-item__title">
+                  Wigglytuff
+                  <span class="pokemon-detailed__evolution-item__title-id">
+                    №0040
+                  </span>
+                </h3>
+              </router-link>
+
+              <div class="pokemon-detailed__evolution-item__types">
+                <div class="pokemon-detailed__evolution-item__type">
+                  <router-link to="#">Grass</router-link>
+                </div>
+                <div class="pokemon-detailed__evolution-item__type">
+                  <router-link to="#">Poison</router-link>
+                </div>
               </div>
-              <h3 class="pokemon-detailed__evolution-item__title">
-                Wigglytuff
-                <span class="pokemon-detailed__evolution-item__title-id">
-                  №0040
-                </span>
-              </h3>
             </div>
             <div class="pokemon-detailed__evolution-item">
-              <div class="pokemon-detailed__evolution-item__img">
-                <img :src="pokemon.url" alt="pokemon" />
+              <router-link to="#">
+                <div class="pokemon-detailed__evolution-item__img">
+                  <img :src="pokemon.url" alt="pokemon" />
+                </div>
+                <h3 class="pokemon-detailed__evolution-item__title">
+                  Wigglytuff
+                  <span class="pokemon-detailed__evolution-item__title-id">
+                    №0040
+                  </span>
+                </h3>
+              </router-link>
+
+              <div class="pokemon-detailed__evolution-item__types">
+                <div class="pokemon-detailed__evolution-item__type">
+                  <router-link to="#">Grass</router-link>
+                </div>
+                <div class="pokemon-detailed__evolution-item__type">
+                  <router-link to="#">Poison</router-link>
+                </div>
               </div>
-              <h3 class="pokemon-detailed__evolution-item__title">
-                Wigglytuff
-                <span class="pokemon-detailed__evolution-item__title-id">
-                  №0040
-                </span>
-              </h3>
             </div>
           </div>
         </div>
@@ -281,15 +314,17 @@ export default defineComponent({
     &-menu {
       position: relative;
       display: flex;
+      align-items: center;
       justify-content: space-between;
       width: 100%;
     }
 
     &-title {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
       margin-left: 1rem;
-      font-weight: 700;
-      font-size: 1.4rem;
+      font-weight: 800;
+      font-size: 1.5em;
+      letter-spacing: 0.1rem;
       color: $color-dark-gray;
     }
 
@@ -297,10 +332,6 @@ export default defineComponent({
       display: block;
       width: 15%;
       text-align: center;
-
-      &:not(:last-child) {
-        margin: 0 1.5% 1.25rem 0;
-      }
 
       span {
         display: block;
@@ -335,7 +366,7 @@ export default defineComponent({
       &__item {
         position: relative;
         z-index: 2;
-        border-bottom: 0.25em solid #88ceff;
+        border-bottom: 0.25em solid transparent;
         width: 100%;
         height: 0.5em;
         background: transparent;
@@ -348,7 +379,14 @@ export default defineComponent({
         border: none;
         width: 100%;
         height: 100%;
-        background: $color-accent;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 212, 255, 1) 23%,
+          rgba(20, 112, 199, 1) 49%,
+          rgba(29, 63, 172, 1) 69%,
+          rgba(7, 49, 113, 1) 99%
+        );
+        opacity: 0.9;
       }
     }
   }
@@ -358,7 +396,7 @@ export default defineComponent({
     margin: 2rem auto;
     border-radius: 10px;
     padding: 10px 15px;
-    height: 301px;
+    min-height: 310px;
     max-width: 80%;
     background: center/ cover url('../assets/images/evolution-bg.png');
 
@@ -376,6 +414,7 @@ export default defineComponent({
     }
 
     &-title {
+      margin-bottom: 1rem;
       font-weight: 700;
       letter-spacing: 0.1em;
       color: $color-white;
@@ -390,9 +429,25 @@ export default defineComponent({
     }
 
     &-item {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
+
+      &:not(:last-child) {
+        &::after {
+          content: '';
+          position: absolute;
+          right: -55%;
+          top: 41%;
+          border-top: 5px solid #fff;
+          border-right: 5px solid #fff;
+          width: 60px;
+          height: 60px;
+          background: none;
+          transform: rotate(45deg) translateY(-50%);
+        }
+      }
 
       &__img {
         position: relative;
@@ -412,16 +467,50 @@ export default defineComponent({
           height: 80%;
           object-fit: cover;
           transform: translate(-50%, -50%);
+          transition: width 0.3s ease-in;
+
+          &:hover {
+            width: 90%;
+          }
         }
       }
 
       &__title {
+        margin-right: 0.3rem;
+        font-weight: 700;
         font-size: 1.1rem;
         color: $color-white;
 
         &-id {
-          font-size: 0.8rem;
+          font-size: 0.9rem;
           color: $color-gray;
+        }
+      }
+
+      &__types {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1rem;
+      }
+
+      &__type {
+        border-radius: 5px;
+        padding: 4px 0;
+        width: 90px;
+        box-shadow: -6px 5px 11px $color-dark-gray;
+        text-align: center;
+        color: $color-dark-gray;
+        background-color: $color-accent;
+        transition: background-color 0.3s ease-out;
+
+        &:hover {
+          color: $color-light-gray;
+          background-color: #2f81a2;
+        }
+
+        &:first-child {
+          margin-right: 1rem;
         }
       }
     }
