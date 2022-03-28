@@ -24,24 +24,36 @@
                 <div class="pokemon-detailed__info-item">
                   <h4 class="pokemon-detailed__info-item__title">Gender</h4>
                   <div class="pokemon-detailed__info-item__value">
-                    Male Female
+                    <span>
+                      <icon-template
+                        width="24"
+                        height="24"
+                        name="male-gender"
+                      />
+                    </span>
+                    <span>
+                      <icon-template
+                        width="24"
+                        height="24"
+                        name="female-gender"
+                      />
+                    </span>
                   </div>
                 </div>
               </div>
               <div class="pokemon-detailed__pokemon-info__left">
                 <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Height</h4>
-                  <p class="pokemon-detailed__info-item__value">0.5m</p>
+                  <h4 class="pokemon-detailed__info-item__title">Category</h4>
+                  <p class="pokemon-detailed__info-item__value">Baloon</p>
                 </div>
                 <div class="pokemon-detailed__info-item">
                   <h4 class="pokemon-detailed__info-item__title">Height</h4>
                   <p class="pokemon-detailed__info-item__value">0.5m</p>
                 </div>
                 <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Gender</h4>
-                  <div class="pokemon-detailed__info-item__value">
-                    Male Female
-                  </div>
+                  <h4 class="pokemon-detailed__info-item__title">Abilities</h4>
+                  <p class="pokemon-detailed__info-item__value">Cute Charm</p>
+                  <p class="pokemon-detailed__info-item__value">Competitive</p>
                 </div>
               </div>
             </div>
@@ -61,7 +73,7 @@
                 Weakness
               </p>
               <div class="pokemon-detailed__pokemon-elements__actions">
-                <button class="pokemon-detailed__pokemon-elements__ype">
+                <button class="pokemon-detailed__pokemon-elements__type">
                   Steel
                 </button>
                 <button class="pokemon-detailed__pokemon-elements__type">
@@ -98,9 +110,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import IconTemplate from '@/components/IconTemplate.vue'
 
 export default defineComponent({
   name: 'pokemonDetailed',
+  components: { IconTemplate },
   setup() {
     return {
       pokemon: {
@@ -144,7 +158,7 @@ export default defineComponent({
     margin-bottom: 1rem;
     border-radius: 10px;
     padding: 15px;
-    height: 40%;
+    width: 60%;
     max-height: 40%;
     background-color: $color-accent;
 
@@ -161,6 +175,7 @@ export default defineComponent({
 
     &-main {
       display: flex;
+      margin-bottom: 2rem;
       padding: 15px;
       background-color: $color-white;
     }
@@ -174,6 +189,15 @@ export default defineComponent({
       font-weight: 700;
       font-size: 14px;
       color: $color-white;
+    }
+
+    &__value {
+      font-weight: 500;
+      color: $color-dark-gray;
+
+      span:first-child {
+        margin-right: 10px;
+      }
     }
   }
 
@@ -194,9 +218,10 @@ export default defineComponent({
       margin-bottom: 0.5rem;
       border-radius: 5px;
       padding: 8px 12px;
+      width: 100px;
       font-weight: 700;
-      color: $color-white;
-      background-color: $color-background;
+      color: $color-dark-gray;
+      background-color: $color-light-gray;
 
       &:not(:last-child) {
         margin-right: 0.5rem;
@@ -205,18 +230,40 @@ export default defineComponent({
   }
 
   &__stats {
-    width: 38%;
-    background-color: $color-gray;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    width: 37%;
+    background-color: $color-background;
 
-    &__menu {
+    &-menu {
       position: relative;
+      display: flex;
+      justify-content: space-between;
       width: 100%;
     }
 
+    &-title {
+      margin-bottom: 0.5rem;
+      margin-left: 1rem;
+      font-weight: 700;
+      font-size: 1.4gitrem;
+      color: $color-dark-gray;
+    }
+
     &-item {
-      display: inline-block;
-      margin: 0 1.5% 1.25rem 0;
+      display: block;
       width: 15%;
+      text-align: center;
+
+      &:not(:last-child) {
+        margin: 0 1.5% 1.25rem 0;
+      }
+
+      span {
+        display: block;
+        color: $color-medium-gray;
+      }
 
       &:nth-child(1) {
         .pokemon-detailed__stats-gauge .pokemon-detailed__stats-gauge__meter {
@@ -240,12 +287,13 @@ export default defineComponent({
     &-gauge {
       position: relative;
       overflow: hidden;
+      margin-bottom: 0.5rem;
       background-color: $color-white;
 
       &__item {
         position: relative;
         z-index: 2;
-        border-bottom: 0.25em solid #a4a4a4;
+        border-bottom: 0.25em solid #88ceff;
         width: 100%;
         height: 0.5em;
         background: transparent;
