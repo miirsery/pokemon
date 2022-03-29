@@ -48,7 +48,7 @@ export default defineComponent({
       pokemonListValues.value = pokemonList
     }
 
-    function handleClose() {
+    const handleClose = () => {
       emit('close')
     }
 
