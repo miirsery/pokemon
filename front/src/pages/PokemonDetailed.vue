@@ -2,7 +2,7 @@
   <div class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <div class="pokemon-detailed__img">
-        <img :src="img" :alt="name" />
+        <img :src="pokemonDetailed.img" :alt="pokemonDetailed.name" />
       </div>
       <div class="pokemon-detailed__info">
         <h2 class="pokemon-detailed__title subtitle">
@@ -21,43 +21,75 @@ export default defineComponent({
   name: 'PokemonDetailed',
   props: {
     id: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
   setup() {
-    const pokemon = {
-      id: 37,
-      name: 'Pokemon',
-      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/37.png',
+    type DetailedPokemonStatsType = {
+      stat: number
+      name: string
     }
 
-    const currentPokemon = {
-      pokemon: {
-        id: pokemon.id,
-        name: pokemon.name,
-        img: pokemon.img,
-      },
+    type DetailedPokemonType = {
+      id: number
+      name: string
+      img: string
+      abilities: string[]
+      stats: DetailedPokemonStatsType[]
     }
 
-    let oldPokemonList = JSON.parse(localStorage.getItem('pokemon'))
+    type LocalStoragePokemonType = {
+      id: number
+      name: string
+      img: string
+    }
+
+    const pokemonDetailed: DetailedPokemonType = {
+      id: 44,
+      name: 'Pokemon4ik',
+      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
+      abilities: ['fire', 'storm'],
+      stats: [
+        {
+          stat: 48,
+          name: 'hp',
+        },
+      ],
+    }
+
+    let localStoragePokemon: LocalStoragePokemonType = {
+      id: pokemonDetailed.id,
+      name: pokemonDetailed.name,
+      img: pokemonDetailed.img,
+    }
+
+    let oldPokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
 
     onMounted(() => {
       if (oldPokemonList) {
-        oldPokemonList[`pokemon-${pokemon.id}`] = currentPokemon.pokemon
-        localStorage.setItem('pokemon', JSON.stringify(oldPokemonList))
+        let newPokemonList = oldPokemonList
+        newPokemonList.forEach((pokemon, index) => {
+          if (pokemon.id === localStoragePokemon.id) {
+            newPokemonList.splice(index, 1)
+          }
+        })
 
-        if (Object.keys(oldPokemonList).length >= 6) {
-          let newList = Object.values(oldPokemonList)
-          newList.shift()
-          localStorage.setItem(`pokemon`, JSON.stringify(newList))
+        newPokemonList.unshift(localStoragePokemon)
+        if (newPokemonList.length > 5) {
+          newPokemonList.pop()
         }
+        localStorage.setItem('pokemon-list', JSON.stringify(newPokemonList))
       } else {
-        currentPokemon[`pokemon-${pokemon.id}`] = currentPokemon.pokemon
-        delete currentPokemon['pokemon']
-        localStorage.setItem(`pokemon`, JSON.stringify(currentPokemon))
+        localStorage.setItem(
+          'pokemon-list',
+          JSON.stringify([localStoragePokemon])
+        )
       }
     })
+    return {
+      pokemonDetailed,
+    }
   },
 })
 </script>

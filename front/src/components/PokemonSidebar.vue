@@ -1,14 +1,17 @@
 <template>
-  <aside class="pokemon-sidebar" @click="$emit('close')">
+  <aside class="pokemon-sidebar" @click="handleClose">
     <div class="pokemon-sidebar__wrapper" @click.stop>
+      <h3 class="pokemon-sidebar__title">Последнее просмотренное</h3>
       <div class="pokemon-sidebar__top">
-        <button @click="$emit('close')">X</button>
-        <h3 class="pokemon-sidebar__title">Последнее просмотренное</h3>
+        <button class="pokemon-sidebar__close" @click="handleClose">X</button>
+        <button class="pokemon-sidebar__clear" @click="handleClearPokemonList">
+          Отчистить список
+        </button>
       </div>
       <ul class="pokemon-sidebar__menu">
         <router-link
           class="pokemon-sidebar__item"
-          v-for="pokemon in filteredListValues"
+          v-for="pokemon in pokemonListValues"
           :key="pokemon.name"
           :to="{ name: 'PokemonDetailed', params: { id: pokemon.id } }"
           @click="this.$emit('close')"
@@ -22,9 +25,6 @@
           </div>
         </router-link>
       </ul>
-      <button class="pokemon-sidebar__clear" @click="clearPokemonList">
-        Отчистить
-      </button>
     </div>
   </aside>
 </template>
@@ -32,7 +32,8 @@
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  setup() {
+  emits: ['close'],
+  setup(props, { emit }) {
     type PokemonType = {
       pokemon: {
         id: number
@@ -40,32 +41,33 @@ export default defineComponent({
         img: string
       }
     }
-    let pokemonList = JSON.parse(localStorage.getItem('pokemon'))
-    let pokemonListValues = ref<PokemonType[]>([])
-    let filteredListValues = ref<PokemonType[]>([])
+
+    const pokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
+    const pokemonListValues = ref<PokemonType[]>([pokemonList])
     if (pokemonList) {
       pokemonListValues.value = pokemonList
-      filteredListValues.value = Object.values(
-        pokemonListValues.value
-      ).reverse()
     }
-    const clearPokemonList = () => {
-      localStorage.removeItem('pokemon')
-      filteredListValues.value.length = 0
+
+    function handleClose() {
+      emit('close')
     }
+
+    const handleClearPokemonList = () => {
+      localStorage.removeItem('pokemon-list')
+      pokemonListValues.value = []
+    }
+
     return {
-      clearPokemonList,
-      filteredListValues,
+      pokemonListValues,
+      pokemonList,
+      handleClearPokemonList,
+      handleClose,
     }
   },
 })
 </script>
 
 <style scoped lang="scss">
-button {
-  font-size: 18px;
-}
-
 .pokemon-sidebar {
   position: fixed;
   left: 0;
@@ -112,18 +114,16 @@ button {
       padding: 5px 0;
       background-color: #e4e4e4;
     }
-
-    &:hover {
-      scrollbar-color: #aca3f8;
-    }
   }
 
   &__title {
+    margin: 1rem 0.5rem 0.5rem;
     font-weight: 700;
     font-size: 18px;
   }
 
   &__top {
+    position: relative;
     display: flex;
     justify-content: space-between;
     padding: 20px;
@@ -155,7 +155,13 @@ button {
   &__clear {
     position: absolute;
     right: 10px;
-    bottom: 5px;
+    top: 50%;
+    font-size: 0.9rem;
+    transform: translateY(-50%);
+  }
+
+  &__close {
+    font-size: 1.1rem;
   }
 }
 

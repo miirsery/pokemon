@@ -20,19 +20,19 @@ import PokemonSidebar from '@/components/PokemonSidebar.vue'
 
 export default defineComponent({
   name: 'Layout',
+  components: {
+    PokemonHeader,
+    PokemonFooter,
+    PokemonSidebar,
+  },
   setup() {
-    const showSidebar = ref(false)
+    const showSidebar = ref<Boolean>(false)
     const toggleSidebar = () => (showSidebar.value = !showSidebar.value)
 
     return {
       toggleSidebar,
       showSidebar,
     }
-  },
-  components: {
-    PokemonHeader,
-    PokemonFooter,
-    PokemonSidebar,
   },
 })
 </script>
