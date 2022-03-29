@@ -195,11 +195,16 @@ export default defineComponent({
     PokemonId,
   },
   setup() {
+    type PokemonType = {
+      id: number
+      url: string
+    }
+    const pokemon: PokemonType = {
+      id: 444,
+      url: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
+    }
     return {
-      pokemon: {
-        id: 444,
-        url: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
-      },
+      pokemon,
     }
   },
 })
