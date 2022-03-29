@@ -58,13 +58,13 @@ export default defineComponent({
       ],
     }
 
-    let localStoragePokemon: LocalStoragePokemonType = {
+    const localStoragePokemon: LocalStoragePokemonType = {
       id: pokemonDetailed.id,
       name: pokemonDetailed.name,
       img: pokemonDetailed.img,
     }
 
-    let oldPokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
+    const oldPokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
 
     onMounted(() => {
       if (oldPokemonList) {
