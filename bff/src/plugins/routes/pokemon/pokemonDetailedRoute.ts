@@ -64,50 +64,25 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
       try {
         const id = req.params.id
         if (id) {
-          const { data } = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
-
-          const evolutionUrl = data.species.url
-          const evolutionChain  = await fastify.axios.get(evolutionUrl)
-
-          const evolutionChainData =
-            await fastify.axios.get(evolutionChain.data['evolution_chain'].url)
-
-          const firstPokemonDataResponse =
-            await fastify.axios.get(evolutionChainData.data.chain.species.url)
-              .then(item => item.data)
-          const firstPokemonDataResponseUrl
-            =  await fastify.axios.get(evolutionChainData.data.chain.species.url)
-              .then(item => item.data.varieties.pokemon.url)
-          const firstPokemonDataResponseUrlData
-            = await fastify.axios.get(firstPokemonDataResponseUrl)
-
-          console.log(firstPokemonDataResponseUrlData)
-          const firstPokemonData = {
-            name: firstPokemonDataResponse.name,
-            id: firstPokemonDataResponse.id
-          }
-          console.log(firstPokemonData)
-          const evolutionPokemonList = {
-            first: {
-              name: '',
-              id: 0,
-              url: '',
-              image: '',
-            }
-          }
-          const pokemonDetailed =
-            PokemonDetailedMapper.mapDetailedPokemonToFrontend(
-              data.id,
-              data.name,
-              data.sprites.other['official-artwork']['front_default'],
-              data.height,
-              data.weight,
-              data.types,
-              data.stats,
-              data.abilities,
-            )
+          const pokemonData  = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+          const pokemonSpecies = await fastify.axios.get(pokemonData.data.species.url)
+          const pokemonEvolutionChainUrl
+            = await fastify.axios.get(pokemonSpecies.data['evolution_chain'].url)
+          const pokemonGenera = pokemonSpecies.data.genra
+          // const pokemonGender =
+          // const pokemonDetailed =
+          //   PokemonDetailedMapper.mapDetailedPokemonToFrontend(
+          //     pokemonData.id,
+          //     pokemonData.name,
+          //     pokemonData.sprites.other['official-artwork']['front_default'],
+          //     pokemonData.height,
+          //     pokemonData.weight,
+          //     pokemonData.types,
+          //     pokemonData.stats,
+          //     pokemonData.abilities,
+          //   )
           await repl.send({
-            pokemon: pokemonDetailed
+            // pokemon: pokemonDetailed
           })
         }
       }
