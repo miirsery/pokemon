@@ -11,19 +11,23 @@ const PokemonStatsSchema = Type.Object({
   name: Type.String()
 })
 
-const pokemonTypesType = Type.Object( {
+const PokemonTypesType = Type.Object( {
   name: Type.String(),
 })
 
-const pokemonAbilities = Type.Object({
+const PokemonAbilities = Type.Object({
   name: Type.String(),
   url: Type.String(),
 })
 
-const PokemonEvolutionSchema = Type.Object({
-  name: Type.String(),
-  url: Type.String()
-})
+const pokemonEvolution =
+   Type.Object({
+     name: Type.String(),
+     id: Type.Number(),
+     url: Type.String(),
+     image: Type.String()
+   })
+
 
 const PokemonSchema = Type.Object({
   id: Type.Number(),
@@ -31,10 +35,9 @@ const PokemonSchema = Type.Object({
   image: Type.String(),
   height: Type.Number(),
   weight: Type.Number(),
-  types: Type.Array(pokemonTypesType),
+  types: Type.Array(PokemonTypesType),
   stats: Type.Array(PokemonStatsSchema),
-  abilities: Type.Array(pokemonAbilities)
-  // evolution: Type.Array(PokemonEvolutionSchema)
+  abilities: Type.Array(PokemonAbilities)
 })
 
 const responseSchema = Type.Object({
@@ -62,6 +65,36 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
         const id = req.params.id
         if (id) {
           const { data } = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+
+          const evolutionUrl = data.species.url
+          const evolutionChain  = await fastify.axios.get(evolutionUrl)
+
+          const evolutionChainData =
+            await fastify.axios.get(evolutionChain.data['evolution_chain'].url)
+
+          const firstPokemonDataResponse =
+            await fastify.axios.get(evolutionChainData.data.chain.species.url)
+              .then(item => item.data)
+          const firstPokemonDataResponseUrl
+            =  await fastify.axios.get(evolutionChainData.data.chain.species.url)
+              .then(item => item.data.varieties.pokemon.url)
+          const firstPokemonDataResponseUrlData
+            = await fastify.axios.get(firstPokemonDataResponseUrl)
+
+          console.log(firstPokemonDataResponseUrlData)
+          const firstPokemonData = {
+            name: firstPokemonDataResponse.name,
+            id: firstPokemonDataResponse.id
+          }
+          console.log(firstPokemonData)
+          const evolutionPokemonList = {
+            first: {
+              name: '',
+              id: 0,
+              url: '',
+              image: '',
+            }
+          }
           const pokemonDetailed =
             PokemonDetailedMapper.mapDetailedPokemonToFrontend(
               data.id,
@@ -73,12 +106,6 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
               data.stats,
               data.abilities,
             )
-          for (const item of pokemonDetailed.abilities) {
-            const { data } = await fastify.axios.get(item.url)
-            console.log(data)
-          }
-          // const { abilities } = await fastify.get()
-
           await repl.send({
             pokemon: pokemonDetailed
           })

@@ -4,13 +4,9 @@ type statsType = {
   baseStat: number,
   name: string,
 }
-type ablitilesType = {
+type abilitiesType = {
   name: string,
   url: string
-}
-type evolutionType = {
-  name: string,
-  url: string,
 }
 
 export class PokemonDetailedMapper {
@@ -22,8 +18,7 @@ export class PokemonDetailedMapper {
     weight: number,
     types: string[],
     stats: statsType[],
-    abilities: ablitilesType[]
-    // evolution: evolutionType[],
+    abilities: abilitiesType[]
 
   ): PokemonSchemaType => {
     return {
@@ -37,7 +32,6 @@ export class PokemonDetailedMapper {
         ({ baseStat: item['base_stat'], name: item['stat']['name'] })
       ),
       abilities: abilities.map(item => item['ability'])
-      // evolution: evolution
     }
   }
 }
