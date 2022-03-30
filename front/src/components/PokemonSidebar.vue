@@ -14,7 +14,7 @@
           v-for="pokemon in pokemonListValues"
           :key="pokemon.name"
           :to="{ name: 'PokemonDetailed', params: { id: pokemon.id } }"
-          @click="this.$emit('close')"
+          @click="handleClose"
         >
           <div class="pokemon-sidebar__item-img">
             <img :src="pokemon.img" :alt="pokemon.name" />
