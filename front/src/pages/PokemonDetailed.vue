@@ -39,12 +39,6 @@ export default defineComponent({
       stats: DetailedPokemonStatsType[]
     }
 
-    type LocalStoragePokemonType = {
-      id: number
-      name: string
-      img: string
-    }
-
     const pokemonDetailed: DetailedPokemonType = {
       id: 44,
       name: 'Pokemon4ik',
@@ -58,7 +52,9 @@ export default defineComponent({
       ],
     }
 
-    const localStoragePokemon: LocalStoragePokemonType = {
+    const localStoragePokemon: Partial<
+      Omit<DetailedPokemonType, 'abilities' | 'stats'>
+    > = {
       id: pokemonDetailed.id,
       name: pokemonDetailed.name,
       img: pokemonDetailed.img,
