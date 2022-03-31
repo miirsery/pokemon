@@ -5,25 +5,25 @@
         wigglytuff
         <span class="pokemon-detailed__id">№{{ filteredId }}</span>
       </h2>
-      <div class="pokemon-detailed__content">
-        <div class="pokemon-main">
+      <div class="pokemon-main">
+        <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
             <img :src="pokemon.url" :alt="name" />
           </div>
           <div class="pokemon-main__right">
             <div class="pokemon-info">
-              <div class="pokemon-info__item">
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Height</h4>
-                  <p class="pokemon-detailed__info-item--value">0.5m</p>
+              <div class="pokemon-info__item-left">
+                <div class="pokemon-info__item">
+                  <h4 class="pokemon-info__item-title">Height</h4>
+                  <p class="pokemon-info__item-value">0.5m</p>
                 </div>
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Height</h4>
-                  <p class="pokemon-detailed__info-item__value">0.5m</p>
+                <div class="pokemon-info__item">
+                  <h4 class="pokemon-info__item-title">Height</h4>
+                  <p class="pokemon-info__item-value">0.5m</p>
                 </div>
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Gender</h4>
-                  <div class="pokemon-detailed__info-item__value">
+                <div class="pokemon-info__item">
+                  <h4 class="pokemon-info__item-title">Gender</h4>
+                  <div class="pokemon-info__item-value">
                     <span>
                       <icon-template
                         width="24"
@@ -41,23 +41,19 @@
                   </div>
                 </div>
               </div>
-              <div class="pokemon-info__item">
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Category</h4>
-                  <p class="pokemon-detailed__info-item__value">Baloon</p>
+              <div class="pokemon-info__item-right">
+                <div class="pokemon-info__item">
+                  <h4 class="pokemon-info__item-title">Category</h4>
+                  <p class="pokemon-info__item-value">Baloon</p>
                 </div>
                 <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Height</h4>
-                  <p class="pokemon-detailed__info-item__value">0.5m</p>
+                  <h4 class="pokemon-info__item-title">Height</h4>
+                  <p class="pokemon-info__item-value">0.5m</p>
                 </div>
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-detailed__info-item__title">Abilities</h4>
-                  <p class="pokemon-detailed__info-item__value ability">
-                    Cute Charm
-                  </p>
-                  <p class="pokemon-detailed__info-item__value ability">
-                    Competitive
-                  </p>
+                <div class="pokemon-info__item">
+                  <h4 class="pokemon-info__item-title">Abilities</h4>
+                  <p class="pokemon-info__item-value ability">Cute Charm</p>
+                  <p class="pokemon-info__item-value ability">Competitive</p>
                 </div>
               </div>
             </div>
@@ -210,18 +206,37 @@ export default defineComponent({
     padding: 2rem;
     background-color: $color-white;
   }
+}
 
-  &__info-item {
+.pokemon-info {
+  display: flex;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  padding: 15px;
+  width: 60%;
+  max-height: 40%;
+  background-color: $color-accent;
+
+  &__item {
     margin-bottom: 1rem;
+    width: 50%;
 
-    &__title {
+    &-title {
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 14px;
       color: $color-white;
     }
 
-    &__value {
+    &-right {
+      width: 50%;
+    }
+
+    &-left {
+      width: 50%;
+    }
+
+    &-value {
       position: relative;
       font-weight: 600;
       font-size: 1.1rem;
@@ -254,20 +269,6 @@ export default defineComponent({
   }
 }
 
-.pokemon-info {
-  display: flex;
-  margin-bottom: 1rem;
-  border-radius: 10px;
-  padding: 15px;
-  width: 60%;
-  max-height: 40%;
-  background-color: $color-accent;
-
-  &__item:first-child {
-    margin-right: clamp(5rem, 10vw, 20rem);
-  }
-}
-
 .pokemon-elements {
   margin-bottom: 1rem;
 
@@ -297,9 +298,11 @@ export default defineComponent({
 }
 
 .pokemon-main {
-  display: flex;
-  margin-bottom: 2rem;
-  padding: 15px;
+  &__wrapper {
+    display: flex;
+    margin-bottom: 2rem;
+    padding: 15px;
+  }
 
   &__img {
     margin-right: clamp(1rem, 4vw, 3rem);
