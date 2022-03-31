@@ -9,6 +9,14 @@ type abilitiesType = {
   url: string
 }
 
+type evolutionType = {
+  id: number,
+  name: string,
+  image: string,
+  types: string[],
+  stage: number
+}
+
 export class PokemonDetailedMapper {
   static mapDetailedPokemonToFrontend = (
     id: number,
@@ -18,7 +26,9 @@ export class PokemonDetailedMapper {
     weight: number,
     types: string[],
     stats: statsType[],
-    abilities: abilitiesType[]
+    abilities: abilitiesType[],
+    genders: string[],
+    evolution: evolutionType[]
 
   ): PokemonSchemaType => {
     return {
@@ -31,7 +41,9 @@ export class PokemonDetailedMapper {
       stats: stats.map(item =>
         ({ baseStat: item['base_stat'], name: item['stat']['name'] })
       ),
-      abilities: abilities.map(item => item['ability'])
+      abilities: abilities.map(item => item['ability']),
+      genders: genders,
+      evolution: evolution
     }
   }
 }
