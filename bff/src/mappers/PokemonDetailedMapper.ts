@@ -1,5 +1,4 @@
 import { PokemonSchemaType } from '~/plugins/routes/pokemon/pokemonDetailedRoute'
-import {Type} from "@sinclair/typebox";
 
 type statsType = {
   baseStat: number,
@@ -17,6 +16,9 @@ type evolutionType = {
   types: string[],
   stage: number
 }
+type pokemonGeneraType = {
+  genus: string,
+}
 
 export class PokemonDetailedMapper {
   static mapDetailedPokemonToFrontend = (
@@ -29,8 +31,8 @@ export class PokemonDetailedMapper {
     stats: statsType[],
     abilities: abilitiesType[],
     genders: string[],
+    genera: pokemonGeneraType[],
     evolution: evolutionType[],
-
   ): PokemonSchemaType => {
     return {
       id: id,
@@ -44,7 +46,9 @@ export class PokemonDetailedMapper {
       ),
       abilities: abilities.map(item => item['ability']),
       genders: genders,
-      evolution: evolution,
+      genera: genera.filter(item =>
+        (item['language'].name === 'en' && item.genus)),
+      evolution: evolution
     }
   }
 }

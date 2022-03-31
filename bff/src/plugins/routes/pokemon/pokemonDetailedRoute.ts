@@ -1,7 +1,6 @@
 import { Static, Type }  from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
 import { PokemonDetailedMapper } from '../../../mappers/PokemonDetailedMapper'
-import fastify from 'fastify'
 
 const ParamsSchema = Type.Object({
   id: Type.Optional(Type.Number())
@@ -30,7 +29,9 @@ const PokemonEvolutionSchema =
     stage: Type.Number()
   })
 
-
+const PokemonGeneraSchema = Type.Object({
+  genus: Type.String(),
+})
 const PokemonSchema = Type.Object({
   id: Type.Number(),
   name: Type.String(),
@@ -41,6 +42,7 @@ const PokemonSchema = Type.Object({
   stats: Type.Array(PokemonStatsSchema),
   abilities: Type.Array(PokemonAbilities),
   genders: Type.Array(Type.String()),
+  genera: Type.Array(PokemonGeneraSchema),
   evolution: Type.Array(PokemonEvolutionSchema),
 })
 
@@ -74,7 +76,7 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
           const pokemonSpecies = await fastify.axios.get(pokemonData.data.species.url)
           const pokemonEvolutionChainUrl
             = await fastify.axios.get(pokemonSpecies.data['evolution_chain'].url)
-
+          const pokemonGenera = pokemonSpecies.data.genera
           const evolutionChain: PokemonEvolutionType[] =
             await getEvolutionChain(
               pokemonEvolutionChainUrl.data.chain,
@@ -93,6 +95,7 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
             pokemonData.data.stats,
             pokemonData.data.abilities,
             genders,
+            pokemonGenera,
             evolutionChain,
           )
           await repl.send({
