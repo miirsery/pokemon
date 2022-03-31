@@ -41,11 +41,12 @@ const PokemonSchema = Type.Object({
   stats: Type.Array(PokemonStatsSchema),
   abilities: Type.Array(PokemonAbilities),
   genders: Type.Array(Type.String()),
-  evolution: Type.Array(PokemonEvolutionSchema)
+  evolution: Type.Array(PokemonEvolutionSchema),
 })
 
 const responseSchema = Type.Object({
-  pokemon: PokemonSchema
+  pokemon: PokemonSchema,
+  success: Type.Boolean()
 })
 export type PokemonSchemaType = Static<typeof PokemonSchema>
 export type ResponseSchemaType = Static<typeof responseSchema>
@@ -92,15 +93,19 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
             pokemonData.data.stats,
             pokemonData.data.abilities,
             genders,
-            evolutionChain
+            evolutionChain,
           )
           await repl.send({
-            pokemon: pokemonDetailed
+            pokemon: pokemonDetailed,
+            success: true,
           })
         }
       }
       catch (e) {
         fastify.log.error(e)
+        repl.send({
+          success: false
+        })
       }
     }
   )

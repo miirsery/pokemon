@@ -1,4 +1,5 @@
 import { PokemonSchemaType } from '~/plugins/routes/pokemon/pokemonDetailedRoute'
+import {Type} from "@sinclair/typebox";
 
 type statsType = {
   baseStat: number,
@@ -28,7 +29,7 @@ export class PokemonDetailedMapper {
     stats: statsType[],
     abilities: abilitiesType[],
     genders: string[],
-    evolution: evolutionType[]
+    evolution: evolutionType[],
 
   ): PokemonSchemaType => {
     return {
@@ -43,7 +44,7 @@ export class PokemonDetailedMapper {
       ),
       abilities: abilities.map(item => item['ability']),
       genders: genders,
-      evolution: evolution
+      evolution: evolution,
     }
   }
 }
