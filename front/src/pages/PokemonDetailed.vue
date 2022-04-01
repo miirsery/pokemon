@@ -83,8 +83,8 @@
                 <li class="pokemon-stats__gauge-meter"></li>
                 <li
                   class="pokemon-stats__gauge-item"
-                  v-for="(li_item, li_index) in 15"
-                  :key="li_index"
+                  v-for="(pokemonItem, pokemonIndex) in 15"
+                  :key="pokemonIndex"
                 ></li>
               </ul>
               <span>HP</span>
