@@ -2,10 +2,6 @@ import { Static, Type }  from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
 import { PokemonDetailedMapper } from '../../../mappers/PokemonDetailedMapper'
 
-const ParamsSchema = Type.Object({
-  id: Type.Optional(Type.Number())
-})
-
 const PokemonStatsSchema = Type.Object({
   baseStat: Type.Optional(Type.Number()),
   name: Type.String()
@@ -50,19 +46,23 @@ const responseSchema = Type.Object({
   pokemon: PokemonSchema,
   success: Type.Boolean()
 })
+
 export type PokemonSchemaType = Static<typeof PokemonSchema>
 export type ResponseSchemaType = Static<typeof responseSchema>
 type PokemonEvolutionType = Static<typeof PokemonEvolutionSchema>
 
+type ParamsType = {
+  id: number | string
+}
+
 const pokemonDetailedRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
     Response: ResponseSchemaType,
-    Params: Static<typeof ParamsSchema>
+    Params: ParamsType
   }>(
     '/api/pokemon/:id',
     {
       schema: {
-        params: ParamsSchema,
         response: {
           200: responseSchema
         }
