@@ -42,8 +42,11 @@ export default defineComponent({
       }
     }
 
-    const pokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
-    const pokemonListValues = ref<PokemonType[]>([pokemonList])
+    const pokemonList: PokemonType[] = JSON.parse(
+      localStorage.getItem('pokemon-list')
+    )
+
+    const pokemonListValues = ref<PokemonType[]>(pokemonList)
     if (pokemonList) {
       pokemonListValues.value = pokemonList
     }

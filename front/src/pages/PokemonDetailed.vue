@@ -40,7 +40,7 @@ export default defineComponent({
     }
 
     const pokemonDetailed: DetailedPokemonType = {
-      id: 44,
+      id: 51,
       name: 'Pokemon4ik',
       img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
       abilities: ['fire', 'storm'],
@@ -52,15 +52,19 @@ export default defineComponent({
       ],
     }
 
+    type toExcludeFieldsType = 'abilities' | 'stats'
+
     const localStoragePokemon: Partial<
-      Omit<DetailedPokemonType, 'abilities' | 'stats'>
+      Omit<DetailedPokemonType, toExcludeFieldsType>
     > = {
       id: pokemonDetailed.id,
       name: pokemonDetailed.name,
       img: pokemonDetailed.img,
     }
 
-    const oldPokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
+    const oldPokemonList: typeof localStoragePokemon[] = JSON.parse(
+      localStorage.getItem('pokemon-list')
+    )
 
     onMounted(() => {
       if (oldPokemonList) {
