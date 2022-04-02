@@ -35,8 +35,6 @@ export type DetailedPokemonSchemaType = Static<typeof DetailedPokemonSchema>
 
 type ResponseSchemaType = Static<typeof ResponseSchema>
 
-
-
 const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
     Response: ResponseSchemaType,
@@ -57,7 +55,6 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
             ...req.query,
           }
         })
-
         const pokemonList: DetailedPokemonSchemaType[] = []
         for (const item of data.results) {
           const { data } = await fastify.axios.get(item.url)
@@ -69,7 +66,6 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
             data.abilities
           ))
         }
-
         const meta = PokemonCatalogMapper.mapPaginationToFrontend(
           data.count,
           req.query.limit,
@@ -91,4 +87,3 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   )
 }
 export default pokemonCatalogRoute
-
