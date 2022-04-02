@@ -165,23 +165,81 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 
 export default defineComponent({
   name: 'PokemonDetailed',
-  setup() {
-    type PokemonType = {
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
+    type DetailedPokemonStatsType = {
+      stat: number
+      name: string
+    }
+
+    type DetailedPokemonType = {
       id: number
-      url: string
+      name: string
+      img: string
+      abilities: string[]
+      stats: DetailedPokemonStatsType[]
     }
-    const pokemon: PokemonType = {
-      id: 44,
-      url: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
+    const filteredId = computed(() => props.id.toString().padStart(4, '0'))
+    const pokemonDetailed: DetailedPokemonType = {
+      id: 51,
+      name: 'Pokemon4ik',
+      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
+      abilities: ['fire', 'storm'],
+      stats: [
+        {
+          stat: 48,
+          name: 'hp',
+        },
+      ],
     }
-    const filteredId = computed(() => pokemon.id.toString().padStart(4, '0'))
+
+    type toExcludeFieldsType = 'abilities' | 'stats'
+
+    const localStoragePokemon: Partial<
+      Omit<DetailedPokemonType, toExcludeFieldsType>
+    > = {
+      id: pokemonDetailed.id,
+      name: pokemonDetailed.name,
+      img: pokemonDetailed.img,
+    }
+
+    const oldPokemonList: typeof localStoragePokemon[] = JSON.parse(
+      localStorage.getItem('pokemon-list')
+    )
+
+    onMounted(() => {
+      if (oldPokemonList) {
+        let newPokemonList = oldPokemonList
+        newPokemonList.forEach((pokemon, index) => {
+          if (pokemon.id === localStoragePokemon.id) {
+            newPokemonList.splice(index, 1)
+          }
+        })
+
+        newPokemonList.unshift(localStoragePokemon)
+        if (newPokemonList.length > 5) {
+          newPokemonList.pop()
+        }
+        localStorage.setItem('pokemon-list', JSON.stringify(newPokemonList))
+      } else {
+        localStorage.setItem(
+          'pokemon-list',
+          JSON.stringify([localStoragePokemon])
+        )
+      }
+    })
     return {
-      pokemon,
-      filteredId,
+      pokemonDetailed,
+      filteredId
     }
   },
 })
