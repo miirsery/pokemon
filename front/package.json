@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.16.7",
+    "axios": "^0.26.1",
     "core-js": "^3.6.5",
     "element-plus": "^2.1.4",
     "style-resources-loader": "^1.5.0",

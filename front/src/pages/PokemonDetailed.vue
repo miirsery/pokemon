@@ -2,41 +2,39 @@
   <div class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
-        wigglytuff
-        <span class="pokemon-detailed__id">№{{ filteredId }}</span>
+        {{ detailedPokemon['name'] }}
+        <span class="pokemon-detailed__id">
+          №{{ detailedPokemon['id']?.toString().padStart(4, '0') }}
+        </span>
       </h2>
       <div class="pokemon-main">
         <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
-            <img :src="pokemon.url" :alt="name" />
+            <img
+              :src="detailedPokemon['image']"
+              :alt="detailedPokemon['name']"
+            />
           </div>
           <div class="pokemon-main__right">
             <div class="pokemon-info">
               <div class="pokemon-info__item-left">
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Height</h4>
-                  <p class="pokemon-info__item-value">0.5m</p>
+                  <p class="pokemon-info__item-value">
+                    {{ detailedPokemon['height'] }} m
+                  </p>
                 </div>
                 <div class="pokemon-info__item">
-                  <h4 class="pokemon-info__item-title">Height</h4>
-                  <p class="pokemon-info__item-value">0.5m</p>
+                  <h4 class="pokemon-info__item-title">Weight</h4>
+                  <p class="pokemon-info__item-value">
+                    {{ detailedPokemon['weight'] }} kg
+                  </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Gender</h4>
                   <div class="pokemon-info__item-value">
-                    <span>
-                      <icon-template
-                        width="24"
-                        height="24"
-                        name="male-gender"
-                      />
-                    </span>
-                    <span>
-                      <icon-template
-                        width="24"
-                        height="24"
-                        name="female-gender"
-                      />
+                    <span v-for="gender in detailedPokemon['genders']">
+                      <icon-template :name="gender" width="24" height="24" />
                     </span>
                   </div>
                 </div>
@@ -44,29 +42,33 @@
               <div class="pokemon-info__item-right">
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Category</h4>
-                  <p class="pokemon-info__item-value">Baloon</p>
-                </div>
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-info__item-title">Height</h4>
-                  <p class="pokemon-info__item-value">0.5m</p>
+                  <p class="pokemon-info__item-value">
+                    {{ detailedPokemon['category'] }}
+                  </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Abilities</h4>
-                  <p class="pokemon-info__item-value ability">Cute Charm</p>
-                  <p class="pokemon-info__item-value ability">Competitive</p>
+                  <p
+                    class="pokemon-info__item-value ability"
+                    v-for="ability in detailedPokemon['abilities']"
+                    :key="ability.name"
+                  >
+                    {{ ability.name.replace('-', ' ') }}
+                  </p>
                 </div>
               </div>
             </div>
             <div class="pokemon-elements">
               <p class="pokemon-elements__title subtitle">Type</p>
               <div class="pokemon-elements__actions">
-                <button class="pokemon-elements__type">Normal</button>
-                <button class="pokemon-elements__type">Fairy</button>
-              </div>
-              <p class="pokemon-elements__title subtitle">Weakness</p>
-              <div class="pokemon-elements__actions">
-                <button class="pokemon-elements__type">Steel</button>
-                <button class="pokemon-elements__type">Poison</button>
+                <button
+                  class="pokemon-elements__type"
+                  v-for="type in detailedPokemon['types']"
+                  :key="type"
+                  :class="`type-${type.name}`"
+                >
+                  {{ type.name }}
+                </button>
               </div>
             </div>
           </div>
@@ -76,84 +78,140 @@
           <ul class="pokemon-stats__menu">
             <li
               class="pokemon-stats__item"
-              v-for="(item, index) in 6"
-              :key="index"
+              v-for="(item, index) in detailedPokemon['stats']"
+              :key="item.name"
             >
               <ul class="pokemon-stats__gauge">
-                <li class="pokemon-stats__gauge-meter"></li>
+                <li
+                  :style="{ top: `${100 - item.baseStat / 2}%` }"
+                  class="pokemon-stats__gauge-meter"
+                ></li>
                 <li
                   class="pokemon-stats__gauge-item"
                   v-for="(pokemonItem, pokemonIndex) in 15"
                   :key="pokemonIndex"
                 ></li>
               </ul>
-              <span>HP</span>
+              <span>{{ item.name }}</span>
             </li>
           </ul>
         </div>
         <div class="pokemon-evolution">
           <h2 class="pokemon-evolution__title subtitle">Стадии эволюции</h2>
-          <div class="pokemon-evolution__items">
-            <div class="pokemon-evolution__item">
-              <router-link to="#">
-                <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+          <div class="pokemon-evolution__content">
+            <div class="pokemon-evolution__first-item evolution-pokemon">
+              <router-link
+                :to="{
+                  path: `/pokemon/${detailedPokemon?.evolution?.[0]?.id}`,
+                }"
+                @click="getDetailedPokemon"
+              >
+                <div
+                  class="pokemon-evolution__first-image evolution-pokemon__image"
+                >
+                  <img
+                    :src="detailedPokemon?.evolution?.[0]?.image"
+                    :alt="detailedPokemon?.evolution?.[0]?.name"
+                  />
                 </div>
-                <h3 class="pokemon-evolution__item-title">
-                  Wigglytuff
-                  <span class="pokemon-evolution__item-id">
-                    №{{ filteredId }}
+              </router-link>
+
+              <h3
+                class="pokemon-evolution__first-title evolution-pokemon__name"
+              >
+                {{ detailedPokemon?.evolution?.[0]?.name }}
+                <span class="evolution-pokemon__id">
+                  #{{
+                    detailedPokemon?.evolution?.[0]?.id
+                      .toString()
+                      .padStart(4, '0')
+                  }}
+                </span>
+              </h3>
+              <div
+                class="pokemon-evolution__first-types evolution-pokemon__types"
+              >
+                <p
+                  v-for="type in detailedPokemon?.evolution?.[0]?.types"
+                  :key="type"
+                  :class="`type-${type}`"
+                  class="evolution__first-type evolution-pokemon__type"
+                >
+                  {{ type }}
+                </p>
+              </div>
+            </div>
+            <div
+              class="pokemon-evolution__small"
+              v-if="detailedPokemon['evolution']?.length <= 3"
+            >
+              <div
+                v-for="pokemon in detailedPokemon['evolution']?.slice(1)"
+                :key="pokemon.name"
+                class="pokemon-evolution__first-item evolution-pokemon"
+              >
+                <router-link
+                  :to="{
+                    path: `/pokemon/${pokemon.id}`,
+                  }"
+                  @click="getDetailedPokemon"
+                >
+                  <div class="evolution__first-image evolution-pokemon__image">
+                    <img :src="pokemon.image" :alt="pokemon.name" />
+                  </div>
+                </router-link>
+                <h3 class="evolution__first-title evolution-pokemon__name">
+                  {{ pokemon.name }}
+                  <span class="evolution-pokemon__id">
+                    №{{ pokemon.id.toString().padStart(4, '0') }}
                   </span>
                 </h3>
-              </router-link>
-              <div class="pokemon-evolution__item-types">
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Grass</router-link>
-                </div>
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Poison</router-link>
+                <div class="evolution__first-types evolution-pokemon__types">
+                  <p
+                    v-for="type in pokemon.types"
+                    :key="type"
+                    :class="`type-${type}`"
+                    class="evolution__first-type evolution-pokemon__type"
+                  >
+                    {{ type }}
+                  </p>
                 </div>
               </div>
             </div>
-            <div class="pokemon-evolution__item">
-              <router-link to="#">
-                <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
-                </div>
-                <h3 class="pokemon-evolution__item-title">
-                  Wigglytuff
-                  <span class="pokemon-evolution__item-id">
-                    №{{ filteredId }}
-                  </span>
+            <div class="evolution-more" v-else>
+              <div
+                v-for="pokemon in detailedPokemon['evolution']
+                  ?.slice(1)
+                  .reverse()"
+                :key="pokemon.name"
+                class="evolution-more__item"
+              >
+                <router-link
+                  :to="{
+                    path: `/pokemon/${pokemon.id}`,
+                  }"
+                  @click="getDetailedPokemon"
+                >
+                  <div class="evolution-more__image evolution-pokemon__image">
+                    <img :src="pokemon.image" :alt="pokemon.name" />
+                  </div>
+                </router-link>
+
+                <h3 class="evolution-more__name evolution-pokemon__name">
+                  {{ pokemon.name }}
                 </h3>
-              </router-link>
-              <div class="pokemon-evolution__item-types">
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Grass</router-link>
-                </div>
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Poison</router-link>
-                </div>
-              </div>
-            </div>
-            <div class="pokemon-evolution__item">
-              <router-link to="#">
-                <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
-                </div>
-                <h3 class="pokemon-evolution__item-title">
-                  Wigglytuff
-                  <span class="pokemon-evolution__item-id">
-                    №{{ filteredId }}
-                  </span>
-                </h3>
-              </router-link>
-              <div class="pokemon-evolution__item-types">
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Grass</router-link>
-                </div>
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Poison</router-link>
+                <p class="evolution-more__id evolution-pokemon__id">
+                  №{{ pokemon.id.toString().padStart(4, '0') }}
+                </p>
+                <div class="evolution-more__types evolution-pokemon__types">
+                  <p
+                    v-for="type in pokemon.types"
+                    :key="type"
+                    :class="`type-${type}`"
+                    class="evolution-more__type evolution-pokemon__type"
+                  >
+                    {{ type }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -165,7 +223,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from 'vue'
+import { defineComponent, onMounted, reactive } from 'vue'
+import { pokemonAPI } from '@/api/pokemon.api'
 
 export default defineComponent({
   name: 'PokemonDetailed',
@@ -188,9 +247,8 @@ export default defineComponent({
       abilities: string[]
       stats: DetailedPokemonStatsType[]
     }
-    const filteredId = computed(() => props.id.toString().padStart(4, '0'))
     const pokemonDetailed: DetailedPokemonType = {
-      id: 51,
+      id: 53,
       name: 'Pokemon4ik',
       img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
       abilities: ['fire', 'storm'],
@@ -215,8 +273,29 @@ export default defineComponent({
     const oldPokemonList: typeof localStoragePokemon[] = JSON.parse(
       localStorage.getItem('pokemon-list')
     )
+    let detailedPokemon = reactive({})
+    // let filteredIdData = ref<string>('')
 
-    onMounted(() => {
+    const getDetailedPokemon = async () => {
+      const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(
+        props.id
+      )
+      detailedPokemon['id'] = detailedPokemonData.pokemon.id
+      detailedPokemon['name'] = detailedPokemonData.pokemon.name
+      detailedPokemon['image'] = detailedPokemonData.pokemon.image
+      detailedPokemon['height'] = detailedPokemonData.pokemon.height / 10
+      detailedPokemon['weight'] = detailedPokemonData.pokemon.weight / 10
+      detailedPokemon['types'] = detailedPokemonData.pokemon.types
+      detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
+      detailedPokemon['category'] =
+        detailedPokemonData.pokemon.genera[0].genus.replace('Pokémon', '')
+      detailedPokemon['abilities'] = detailedPokemonData.pokemon.abilities
+      detailedPokemon['genders'] = detailedPokemonData.pokemon.genders
+      detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
+      detailedPokemon['evolution'] =
+        detailedPokemonData.pokemon.evolution.reverse()
+    }
+    const setPokemonListInLocalStorage = () => {
       if (oldPokemonList) {
         let newPokemonList = oldPokemonList
         newPokemonList.forEach((pokemon, index) => {
@@ -236,10 +315,17 @@ export default defineComponent({
           JSON.stringify([localStoragePokemon])
         )
       }
+    }
+
+    onMounted(() => {
+      getDetailedPokemon()
+      setPokemonListInLocalStorage()
     })
     return {
       pokemonDetailed,
-      filteredId
+      detailedPokemon,
+      getDetailedPokemon,
+      // filteredIdData,
     }
   },
 })
@@ -298,6 +384,7 @@ export default defineComponent({
       position: relative;
       font-weight: 600;
       font-size: 1.1rem;
+      text-transform: capitalize;
       color: $color-dark-gray;
 
       span:first-child {
@@ -346,8 +433,6 @@ export default defineComponent({
     padding: 8px 12px;
     width: 100px;
     font-weight: 700;
-    color: $color-dark-gray;
-    background-color: $color-light-gray;
 
     &:not(:last-child) {
       margin-right: 0.5rem;
@@ -391,8 +476,8 @@ export default defineComponent({
   &__menu {
     position: relative;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    justify-content: center;
     width: 100%;
   }
 
@@ -413,24 +498,6 @@ export default defineComponent({
     span {
       display: block;
       color: $color-medium-gray;
-    }
-
-    &:nth-child(1) {
-      .pokemon-stats__gauge .pokemon-stats__gauge-meter {
-        top: 80%;
-      }
-    }
-
-    &:nth-child(3) {
-      .pokemon-stats__gauge .pokemon-stats__gauge-meter {
-        top: 50%;
-      }
-    }
-
-    &:nth-child(5) {
-      .pokemon-stats__gauge .pokemon-stats__gauge-meter {
-        top: 10%;
-      }
     }
   }
 
@@ -453,7 +520,7 @@ export default defineComponent({
       position: absolute;
       top: 30%;
       z-index: 1;
-      border: none;
+      border: 1px solid #fff;
       width: 100%;
       height: 100%;
       background: linear-gradient(
@@ -464,6 +531,7 @@ export default defineComponent({
         rgba(7, 49, 113, 1) 99%
       );
       opacity: 0.9;
+      transition: all 0.9s ease-in;
     }
   }
 }
@@ -472,124 +540,135 @@ export default defineComponent({
   position: relative;
   margin: 2rem auto;
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 30px;
   min-height: 310px;
   max-width: 80%;
   background: center/ cover url('../assets/images/evolution-bg.png');
 
-  &::after {
-    content: ' ';
-    position: absolute;
-    left: -1px;
-    bottom: -1px;
-    z-index: 3;
-    width: 2em;
-    height: 2em;
-    background: center/ cover no-repeat url('../assets/images/cut-corner.png');
-    backface-visibility: hidden;
-    transform: rotate(-90deg);
+  &__item {
+    &-name {
+      margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: $color-white;
+    }
   }
 
-  &__title {
+  &__small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10rem;
+  }
+
+  &__first-item {
+    &:not(:last-child) {
+      margin-right: 10rem;
+    }
+  }
+}
+
+.evolution-pokemon {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__image {
+    position: relative;
     margin-bottom: 1rem;
+    border: 5px solid $color-white;
+    border-radius: 50%;
+    width: 160px;
+    height: 160px;
+    box-shadow: -2px 6px 15px $color-dark-gray;
+    background-color: $color-medium-gray;
+
+    img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 80%;
+      height: 80%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease-in;
+
+      &:hover {
+        width: 90%;
+      }
+    }
+  }
+
+  &__name {
+    margin-right: 0.3rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    font-size: 1.1rem;
     color: $color-white;
   }
 
-  &__items {
+  &__id {
+    font-size: 0.9rem;
+    color: $color-gray;
+  }
+
+  &__types {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2rem;
-    height: 100%;
+    margin-top: 1rem;
   }
 
-  &__item {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  &__type {
+    border-radius: 5px;
+    padding: 4px 0;
+    width: 90px;
+    box-shadow: -6px 5px 11px $color-dark-gray;
+    text-align: center;
+    transition: background-color 0.3s ease-out;
 
-    &:not(:last-child) {
-      &::after {
-        content: '';
-        position: absolute;
-        right: -55%;
-        top: 41%;
-        border-top: 5px solid #fff;
-        border-right: 5px solid #fff;
-        width: 60px;
-        height: 60px;
-        background: none;
-        transform: rotate(45deg) translateY(-50%);
-      }
+    &:hover {
+      color: $color-light-gray;
+      background-color: $color-dark-accent;
     }
 
-    &-img {
-      position: relative;
-      margin-bottom: 1rem;
-      border: 5px solid $color-white;
-      border-radius: 50%;
-      width: 160px;
-      height: 160px;
-      box-shadow: -2px 6px 15px $color-dark-gray;
-      background-color: $color-medium-gray;
-
-      img {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 80%;
-        height: 80%;
-        object-fit: cover;
-        transform: translate(-50%, -50%);
-        transition: width 0.3s ease-in;
-
-        &:hover {
-          width: 90%;
-        }
-      }
+    &:first-child {
+      margin-right: 1rem;
     }
+  }
+}
 
-    &-title {
-      margin-right: 0.3rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: $color-white;
-    }
+.evolution-more {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 55%;
+  gap: 40px;
 
-    &-id {
-      font-size: 0.9rem;
-      color: $color-gray;
-    }
+  &__image {
+    width: 100px;
+    height: 100px;
+  }
 
-    &-types {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 1rem;
-    }
+  &__type {
+    margin: 0 auto;
+    width: 70px;
+  }
 
-    &-type {
-      border-radius: 5px;
-      padding: 4px 0;
-      width: 90px;
-      box-shadow: -6px 5px 11px $color-dark-gray;
-      text-align: center;
-      color: $color-dark-gray;
-      background-color: $color-accent;
-      transition: background-color 0.3s ease-out;
+  &__name {
+    text-align: center;
+  }
 
-      &:hover {
-        color: $color-light-gray;
-        background-color: $color-dark-accent;
-      }
-
-      &:first-child {
-        margin-right: 1rem;
-      }
-    }
+  &__id {
+    text-align: center;
   }
 }
 </style>
