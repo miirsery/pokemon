@@ -66,7 +66,7 @@ export default defineComponent({
       localStorage.getItem('pokemon-list')
     )
 
-    onMounted(() => {
+    onMounted((): void => {
       if (oldPokemonList) {
         let newPokemonList = oldPokemonList
         newPokemonList.forEach((pokemon, index) => {

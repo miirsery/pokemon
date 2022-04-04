@@ -51,11 +51,11 @@ export default defineComponent({
       pokemonListValues.value = pokemonList
     }
 
-    const handleClose = () => {
+    const handleClose = (): void => {
       emit('close')
     }
 
-    const handleClearPokemonList = () => {
+    const handleClearPokemonList = (): void => {
       localStorage.removeItem('pokemon-list')
       pokemonListValues.value = []
     }

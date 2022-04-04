@@ -26,8 +26,9 @@ export default defineComponent({
     PokemonSidebar,
   },
   setup() {
-    const showSidebar = ref<Boolean>(false)
-    const toggleSidebar = () => (showSidebar.value = !showSidebar.value)
+    const showSidebar = ref(false)
+    const toggleSidebar = (): boolean =>
+      (showSidebar.value = !showSidebar.value)
 
     return {
       toggleSidebar,
