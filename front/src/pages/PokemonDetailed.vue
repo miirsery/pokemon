@@ -154,7 +154,7 @@
                   :to="{
                     path: `/pokemon/${pokemon.id}`,
                   }"
-                  @click="getDetailedPokemon"
+                  @click="getDetailedPokemon(pokemon.id)"
                 >
                   <div class="evolution__first-image evolution-pokemon__image">
                     <img :src="pokemon.image" :alt="pokemon.name" />
@@ -190,10 +190,13 @@
                   :to="{
                     path: `/pokemon/${pokemon.id}`,
                   }"
-                  @click="getDetailedPokemon"
                 >
                   <div class="evolution-more__image evolution-pokemon__image">
-                    <img :src="pokemon.image" :alt="pokemon.name" />
+                    <img
+                      :src="pokemon.image"
+                      :alt="pokemon.name"
+                      @click="getDetailedPokemon(pokemon.id)"
+                    />
                   </div>
                 </router-link>
 
@@ -225,6 +228,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue'
 import { pokemonAPI } from '@/api/pokemon.api'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'PokemonDetailed',
@@ -275,11 +279,13 @@ export default defineComponent({
     )
     let detailedPokemon = reactive({})
     // let filteredIdData = ref<string>('')
+    const route = useRoute()
 
-    const getDetailedPokemon = async () => {
-      const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(
-        props.id
-      )
+    const getDetailedPokemon = async (id) => {
+      //let currentId = ref(props.id)
+      console.log(id)
+      const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
+      //detailedPokemon = detailedPokemonData
       detailedPokemon['id'] = detailedPokemonData.pokemon.id
       detailedPokemon['name'] = detailedPokemonData.pokemon.name
       detailedPokemon['image'] = detailedPokemonData.pokemon.image
@@ -318,7 +324,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      getDetailedPokemon()
+      getDetailedPokemon(props.id)
       setPokemonListInLocalStorage()
     })
     return {

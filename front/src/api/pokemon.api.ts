@@ -17,7 +17,7 @@ class PokemonAPI extends AxiosService {
     })
   }
 
-  public getDetailedPokemon(id: number | string) {
+  public getDetailedPokemon(id: number | string | string[]) {
     return this.axiosCall({
       method: 'get',
       url: `/api/pokemon/${id}`,
