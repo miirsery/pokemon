@@ -8,7 +8,7 @@
       <div class="pokemon-main">
         <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
-            <img :src="pokemon.url" :alt="name" />
+            <img :src="pokemonDetailed.img" :alt="name" />
           </div>
           <div class="pokemon-main__right">
             <div class="pokemon-info">
@@ -97,7 +97,7 @@
             <div class="pokemon-evolution__item">
               <router-link to="#">
                 <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+                  <img :src="pokemonDetailed.img" alt="pokemon" />
                 </div>
                 <h3 class="pokemon-evolution__item-title">
                   Wigglytuff
@@ -118,7 +118,7 @@
             <div class="pokemon-evolution__item">
               <router-link to="#">
                 <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+                  <img :src="pokemonDetailed.img" alt="pokemon" />
                 </div>
                 <h3 class="pokemon-evolution__item-title">
                   Wigglytuff
@@ -139,7 +139,7 @@
             <div class="pokemon-evolution__item">
               <router-link to="#">
                 <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+                  <img :src="pokemonDetailed.img" alt="pokemon" />
                 </div>
                 <h3 class="pokemon-evolution__item-title">
                   Wigglytuff
