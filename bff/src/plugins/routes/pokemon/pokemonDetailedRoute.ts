@@ -1,4 +1,4 @@
-import { Static, Type }  from '@sinclair/typebox'
+import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
 import { PokemonDetailedMapper } from '../../../mappers/PokemonDetailedMapper'
 
@@ -7,7 +7,7 @@ const PokemonStatsSchema = Type.Object({
   name: Type.String()
 })
 
-const PokemonTypesType = Type.Object( {
+const PokemonTypesType = Type.Object({
   name: Type.String(),
 })
 
@@ -16,18 +16,18 @@ const PokemonAbilities = Type.Object({
   url: Type.String(),
 })
 
-const PokemonEvolutionSchema =
-  Type.Object({
-    id: Type.Number(),
-    name: Type.String(),
-    image: Type.String(),
-    types: Type.Array(Type.String()),
-    stage: Type.Number()
-  })
+const PokemonEvolutionSchema = Type.Object({
+  id: Type.Number(),
+  name: Type.String(),
+  image: Type.String(),
+  types: Type.Array(Type.String()),
+  stage: Type.Number()
+})
 
 const PokemonGeneraSchema = Type.Object({
   genus: Type.String(),
 })
+
 const PokemonSchema = Type.Object({
   id: Type.Number(),
   name: Type.String(),
@@ -42,14 +42,14 @@ const PokemonSchema = Type.Object({
   evolution: Type.Array(PokemonEvolutionSchema),
 })
 
-const responseSchema = Type.Object({
+const ResponseSchema = Type.Object({
   pokemon: PokemonSchema,
   success: Type.Boolean()
 })
 
 export type PokemonSchemaType = Static<typeof PokemonSchema>
-export type ResponseSchemaType = Static<typeof responseSchema>
-type PokemonEvolutionType = Static<typeof PokemonEvolutionSchema>
+export type ResponseSchemaType = Static<typeof ResponseSchema>
+export type PokemonEvolutionType = Static<typeof PokemonEvolutionSchema>
 
 type ParamsType = {
   id: number | string
@@ -64,7 +64,7 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
     {
       schema: {
         response: {
-          200: responseSchema
+          200: ResponseSchema
         }
       }
     },
@@ -72,7 +72,7 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
       try {
         const id = req.params.id
         if (id) {
-          const pokemonData  = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+          const pokemonData = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
           const pokemonSpecies = await fastify.axios.get(pokemonData.data.species.url)
           const pokemonEvolutionChainUrl
             = await fastify.axios.get(pokemonSpecies.data['evolution_chain'].url)
@@ -98,13 +98,13 @@ const pokemonDetailedRoute = (fastify: FastifyInstance) => {
             pokemonGenera,
             evolutionChain,
           )
+
           await repl.send({
             pokemon: pokemonDetailed,
             success: true,
           })
         }
-      }
-      catch (e) {
+      } catch (e) {
         fastify.log.error(e)
         repl.send({
           success: false
@@ -142,44 +142,39 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
 }
 
 async function getEvolutionChain(evolvesTo, fastify): Promise<PokemonEvolutionType[]> {
-  const evolutionChainCompleted: PokemonEvolutionType[]= []
-  await getEvolveStage(evolvesTo, 0)
+  const evolutionChain: PokemonEvolutionType[] = []
 
-  async function getEvolveStage(evolvesTo, stage) {
-    for(let item in evolvesTo) {
-      if(typeof(evolvesTo[item]) === 'object') {
-        if (item == 'evolves_to') {
-          await getEvolveStage(evolvesTo[item], ++stage)
-        }
-        else {
-          await getEvolveStage(evolvesTo[item], stage)
-        }
-      } else {
-        if (typeof(evolvesTo[item]) == 'string' && evolvesTo[item].includes('pokemon-species'))
-        {
-          const pokemonSpecies = await fastify.axios.get(evolvesTo[item])
-          const id = pokemonSpecies.data.id
-          const pokemon = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
-          const name = pokemon.data.name
-          const image = pokemon.data.sprites.other['official-artwork'].front_default
-          const types = pokemon.data.types.map((item) => item.type.name)
-
-          const evolution = {
-            id: id,
-            name: name,
-            image: image,
-            types: types,
-            stage: stage,
-          }
-
-          evolutionChainCompleted.push(evolution)
-        }
-      }
+  const setCurrentPokemon = (name, id, image, types, stage): PokemonEvolutionType => {
+    return {
+      name,
+      id,
+      image,
+      types,
+      stage,
     }
   }
 
-  return evolutionChainCompleted
-}
+  const getAndAddEvolutionPokemon = async (slug: string, stage: number): Promise<void> => {
+    const pokemon = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${slug}`)
+    evolutionChain.push(setCurrentPokemon(
+      pokemon.data.name,
+      pokemon.data.id,
+      pokemon.data.sprites.other['official-artwork']['front_default'],
+      pokemon.data.types.map(item => item['type']['name']),
+      stage)
+    )
+  }
 
+  await getAndAddEvolutionPokemon(evolvesTo.species.name, 1)
+
+  for (const prop of evolvesTo['evolves_to']) {
+    await getAndAddEvolutionPokemon(prop.species.name, 2)
+    for (const deepProp of prop['evolves_to']) {
+      await getAndAddEvolutionPokemon(deepProp.species.name, 3)
+    }
+  }
+
+  return evolutionChain
+}
 
 export default pokemonDetailedRoute

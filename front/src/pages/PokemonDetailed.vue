@@ -99,122 +99,10 @@
         <div class="pokemon-evolution">
           <h2 class="pokemon-evolution__title subtitle">Стадии эволюции</h2>
           <div class="pokemon-evolution__content">
-            <div class="pokemon-evolution__first-item evolution-pokemon">
-              <router-link
-                :to="{
-                  path: `/pokemon/${detailedPokemon?.evolution?.[0]?.id}`,
-                }"
-                @click="getDetailedPokemon"
-              >
-                <div
-                  class="pokemon-evolution__first-image evolution-pokemon__image"
-                >
-                  <img
-                    :src="detailedPokemon?.evolution?.[0]?.image"
-                    :alt="detailedPokemon?.evolution?.[0]?.name"
-                  />
-                </div>
-              </router-link>
-
-              <h3
-                class="pokemon-evolution__first-title evolution-pokemon__name"
-              >
-                {{ detailedPokemon?.evolution?.[0]?.name }}
-                <span class="evolution-pokemon__id">
-                  #{{
-                    detailedPokemon?.evolution?.[0]?.id
-                      .toString()
-                      .padStart(4, '0')
-                  }}
-                </span>
-              </h3>
-              <div
-                class="pokemon-evolution__first-types evolution-pokemon__types"
-              >
-                <p
-                  v-for="type in detailedPokemon?.evolution?.[0]?.types"
-                  :key="type"
-                  :class="`type-${type}`"
-                  class="evolution__first-type evolution-pokemon__type"
-                >
-                  {{ type }}
-                </p>
-              </div>
-            </div>
-            <div
-              class="pokemon-evolution__small"
-              v-if="detailedPokemon['evolution']?.length <= 3"
-            >
-              <div
-                v-for="pokemon in detailedPokemon['evolution']?.slice(1)"
-                :key="pokemon.name"
-                class="pokemon-evolution__first-item evolution-pokemon"
-              >
-                <router-link
-                  :to="{
-                    path: `/pokemon/${pokemon.id}`,
-                  }"
-                  @click="getDetailedPokemon(pokemon.id)"
-                >
-                  <div class="evolution__first-image evolution-pokemon__image">
-                    <img :src="pokemon.image" :alt="pokemon.name" />
-                  </div>
-                </router-link>
-                <h3 class="evolution__first-title evolution-pokemon__name">
-                  {{ pokemon.name }}
-                  <span class="evolution-pokemon__id">
-                    №{{ pokemon.id.toString().padStart(4, '0') }}
-                  </span>
-                </h3>
-                <div class="evolution__first-types evolution-pokemon__types">
-                  <p
-                    v-for="type in pokemon.types"
-                    :key="type"
-                    :class="`type-${type}`"
-                    class="evolution__first-type evolution-pokemon__type"
-                  >
-                    {{ type }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="evolution-more" v-else>
-              <div
-                v-for="pokemon in detailedPokemon['evolution']
-                  ?.slice(1)
-                  .reverse()"
-                :key="pokemon.name"
-                class="evolution-more__item"
-              >
-                <router-link
-                  :to="{
-                    path: `/pokemon/${pokemon.id}`,
-                  }"
-                >
-                  <div class="evolution-more__image evolution-pokemon__image">
-                    <img
-                      :src="pokemon.image"
-                      :alt="pokemon.name"
-                      @click="getDetailedPokemon(pokemon.id)"
-                    />
-                  </div>
-                </router-link>
-
-                <h3 class="evolution-more__name evolution-pokemon__name">
-                  {{ pokemon.name }}
-                </h3>
-                <p class="evolution-more__id evolution-pokemon__id">
-                  №{{ pokemon.id.toString().padStart(4, '0') }}
-                </p>
-                <div class="evolution-more__types evolution-pokemon__types">
-                  <p
-                    v-for="type in pokemon.types"
-                    :key="type"
-                    :class="`type-${type}`"
-                    class="evolution-more__type evolution-pokemon__type"
-                  >
-                    {{ type }}
-                  </p>
+            <div class="first-pokemon">
+              <div class="first-pokemon__item pokemon-item">
+                <div class="pokemon-item__image">
+                  <img src="www" alt="" />
                 </div>
               </div>
             </div>
@@ -285,21 +173,23 @@ export default defineComponent({
       //let currentId = ref(props.id)
       console.log(id)
       const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
+      console.log(detailedPokemonData.pokemon)
+      detailedPokemon = detailedPokemonData.pokemon
       //detailedPokemon = detailedPokemonData
-      detailedPokemon['id'] = detailedPokemonData.pokemon.id
-      detailedPokemon['name'] = detailedPokemonData.pokemon.name
-      detailedPokemon['image'] = detailedPokemonData.pokemon.image
-      detailedPokemon['height'] = detailedPokemonData.pokemon.height / 10
-      detailedPokemon['weight'] = detailedPokemonData.pokemon.weight / 10
-      detailedPokemon['types'] = detailedPokemonData.pokemon.types
-      detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
-      detailedPokemon['category'] =
-        detailedPokemonData.pokemon.genera[0].genus.replace('Pokémon', '')
-      detailedPokemon['abilities'] = detailedPokemonData.pokemon.abilities
-      detailedPokemon['genders'] = detailedPokemonData.pokemon.genders
-      detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
-      detailedPokemon['evolution'] =
-        detailedPokemonData.pokemon.evolution.reverse()
+      // detailedPokemon['id'] = detailedPokemonData.pokemon.id
+      // detailedPokemon['name'] = detailedPokemonData.pokemon.name
+      // detailedPokemon['image'] = detailedPokemonData.pokemon.image
+      // detailedPokemon['height'] = detailedPokemonData.pokemon.height / 10
+      // detailedPokemon['weight'] = detailedPokemonData.pokemon.weight / 10
+      // detailedPokemon['types'] = detailedPokemonData.pokemon.types
+      // detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
+      // detailedPokemon['category'] =
+      //   detailedPokemonData.pokemon.genera[0].genus.replace('Pokémon', '')
+      // detailedPokemon['abilities'] = detailedPokemonData.pokemon.abilities
+      // detailedPokemon['genders'] = detailedPokemonData.pokemon.genders
+      // detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
+      // detailedPokemon['evolution'] =
+      //   detailedPokemonData.pokemon.evolution.reverse()
     }
     const setPokemonListInLocalStorage = () => {
       if (oldPokemonList) {
@@ -583,7 +473,7 @@ export default defineComponent({
   }
 }
 
-.evolution-pokemon {
+.pokemon-item {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -650,31 +540,6 @@ export default defineComponent({
     &:first-child {
       margin-right: 1rem;
     }
-  }
-}
-
-.evolution-more {
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 55%;
-  gap: 40px;
-
-  &__image {
-    width: 100px;
-    height: 100px;
-  }
-
-  &__type {
-    margin: 0 auto;
-    width: 70px;
-  }
-
-  &__name {
-    text-align: center;
-  }
-
-  &__id {
-    text-align: center;
   }
 }
 </style>

@@ -1,22 +1,18 @@
-import { PokemonSchemaType } from '~/plugins/routes/pokemon/pokemonDetailedRoute'
+import {
+  PokemonSchemaType,
+  PokemonEvolutionType
+} from '~/plugins/routes/pokemon/pokemonDetailedRoute'
 
-type statsType = {
+type StatsType = {
   baseStat: number,
   name: string,
 }
-type abilitiesType = {
+type AbilitiesType = {
   name: string,
   url: string
 }
 
-type evolutionType = {
-  id: number,
-  name: string,
-  image: string,
-  types: string[],
-  stage: number
-}
-type pokemonGeneraType = {
+type PokemonGeneraType = {
   genus: string,
 }
 
@@ -28,11 +24,11 @@ export class PokemonDetailedMapper {
     height: number,
     weight: number,
     types: string[],
-    stats: statsType[],
-    abilities: abilitiesType[],
+    stats: StatsType[],
+    abilities: AbilitiesType[],
     genders: string[],
-    genera: pokemonGeneraType[],
-    evolution: evolutionType[],
+    genera: PokemonGeneraType[],
+    evolution: PokemonEvolutionType[],
   ): PokemonSchemaType => {
     return {
       id: id,
