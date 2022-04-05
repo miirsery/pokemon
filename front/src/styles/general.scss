@@ -30,6 +30,12 @@ button {
   cursor: pointer;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 [class*='container'] {
   margin: 0 auto;
   padding: 0 15px;
