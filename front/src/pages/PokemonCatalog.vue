@@ -173,6 +173,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-catalog {
+  width: 70%;
+
   &__top {
     display: flex;
     justify-content: space-between;

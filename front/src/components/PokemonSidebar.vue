@@ -72,30 +72,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-sidebar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 100;
-  padding: 10px;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-
   &__wrapper {
-    position: fixed;
-    right: 10%;
-    top: 50%;
-    z-index: 120;
-    overflow: auto;
-    border-radius: 10px;
-    width: 350px;
-    max-height: 650px;
-    background-color: rgba(210, 206, 206, 0.98);
-    transform: translateY(-50%);
-    transition: scrollbar-color 0.3s ease-out;
-
     &::-webkit-scrollbar-thumb {
       border: 5px solid #8278ee;
       border-radius: 100px;

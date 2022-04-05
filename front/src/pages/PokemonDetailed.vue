@@ -246,6 +246,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-detailed {
+  width: 70%;
+
   &__title {
     margin-bottom: 2rem;
     width: 100%;
