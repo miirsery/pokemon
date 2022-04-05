@@ -139,8 +139,9 @@ export default defineComponent({
       abilities: string[]
       stats: DetailedPokemonStatsType[]
     }
+
     const pokemonDetailed: DetailedPokemonType = {
-      id: 53,
+      id: 51,
       name: 'Pokemon4ik',
       img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
       abilities: ['fire', 'storm'],
@@ -152,10 +153,10 @@ export default defineComponent({
       ],
     }
 
-    type toExcludeFieldsType = 'abilities' | 'stats'
+    type ToExcludeFieldsType = 'abilities' | 'stats'
 
     const localStoragePokemon: Partial<
-      Omit<DetailedPokemonType, toExcludeFieldsType>
+      Omit<DetailedPokemonType, ToExcludeFieldsType>
     > = {
       id: pokemonDetailed.id,
       name: pokemonDetailed.name,

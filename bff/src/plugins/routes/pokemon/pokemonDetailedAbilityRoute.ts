@@ -11,14 +11,14 @@ const ResponseSchema = Type.Object({
 export type ResponseSchemaType = Static<typeof ResponseSchema>
 export type DescriptionType = Static<typeof DescriptionSchema>
 
-type paramsSchemaType = {
+type ParamsSchemaType = {
   id: string | number
 }
 
 const PokemonDetailedAbilityRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
     Response: ResponseSchemaType,
-    Params: paramsSchemaType
+    Params: ParamsSchemaType
   }>(
     '/api/ability/:id',
     {

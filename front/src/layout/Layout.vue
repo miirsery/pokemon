@@ -1,13 +1,10 @@
 <template>
   <div class="content">
     <pokemon-header />
-    <div class="toggle-sidebar-icon" @click="toggleSidebar">
-      <transition name="animation-pokemon-sidebar">
-        <icon-template name="arrow-left" width="48" height="48" />
-      </transition>
+    <div class="content__wrapper">
+      <router-view />
+      <pokemon-sidebar />
     </div>
-    <pokemon-sidebar @close="toggleSidebar" v-if="showSidebar" />
-    <router-view />
   </div>
   <pokemon-footer />
 </template>
@@ -26,11 +23,12 @@ export default defineComponent({
     PokemonSidebar,
   },
   setup() {
-    const showSidebar = ref<Boolean>(false)
-    const toggleSidebar = () => (showSidebar.value = !showSidebar.value)
-
+    const showSidebar = ref(true)
+    const handleToggleSidebar = (): void => {
+      showSidebar.value = !showSidebar.value
+    }
     return {
-      toggleSidebar,
+      handleToggleSidebar,
       showSidebar,
     }
   },
@@ -40,6 +38,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .content {
   position: relative;
+
+  &__wrapper {
+    display: flex;
+  }
 }
 
 .toggle-sidebar-icon {

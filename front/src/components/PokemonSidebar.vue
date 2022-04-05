@@ -1,9 +1,8 @@
 <template>
-  <aside class="pokemon-sidebar" @click="handleClose">
-    <div class="pokemon-sidebar__wrapper" @click.stop>
-      <h3 class="pokemon-sidebar__title">Последнее просмотренное</h3>
+  <aside class="pokemon-sidebar">
+    <h3 class="pokemon-sidebar__title subtitle">Последнее просмотренное</h3>
+    <div class="pokemon-sidebar__wrapper">
       <div class="pokemon-sidebar__top">
-        <button class="pokemon-sidebar__close" @click="handleClose">X</button>
         <button class="pokemon-sidebar__clear" @click="handleClearPokemonList">
           Отчистить список
         </button>
@@ -51,11 +50,11 @@ export default defineComponent({
       pokemonListValues.value = pokemonList
     }
 
-    const handleClose = () => {
+    const handleClose = (): void => {
       emit('close')
     }
 
-    const handleClearPokemonList = () => {
+    const handleClearPokemonList = (): void => {
       localStorage.removeItem('pokemon-list')
       pokemonListValues.value = []
     }
@@ -72,29 +71,13 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-sidebar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 100;
-  padding: 10px;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-
   &__wrapper {
-    position: fixed;
-    right: 10%;
-    top: 50%;
-    z-index: 120;
-    overflow: auto;
-    border-radius: 10px;
-    width: 350px;
-    max-height: 650px;
-    background-color: rgba(210, 206, 206, 0.98);
-    transform: translateY(-50%);
-    transition: scrollbar-color 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: 300px;
+    height: 600px;
 
     &::-webkit-scrollbar-thumb {
       border: 5px solid #8278ee;
@@ -120,9 +103,8 @@ export default defineComponent({
   }
 
   &__title {
-    margin: 1rem 0.5rem 0.5rem;
+    margin: 1rem 0;
     font-weight: 700;
-    font-size: 18px;
   }
 
   &__top {
@@ -134,8 +116,9 @@ export default defineComponent({
 
   &__item {
     display: flex;
+    flex-direction: column;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid $color-accent;
     padding: 15px;
     color: $color-dark-gray;
 
@@ -161,10 +144,6 @@ export default defineComponent({
     top: 50%;
     font-size: 0.9rem;
     transform: translateY(-50%);
-  }
-
-  &__close {
-    font-size: 1.1rem;
   }
 }
 
