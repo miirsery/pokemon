@@ -3,7 +3,7 @@ import {
   PaginationSchemaType
 } from '~/plugins/routes/pokemon/pokemonCatalogRoute'
 
-type abilityType = {
+type AbilityType = {
   ability: {
     name: string
   }
@@ -25,7 +25,7 @@ export class PokemonCatalogMapper {
     image: string,
     id: number,
     name: string,
-    abilities: abilityType[]
+    abilities: AbilityType[]
   ): DetailedPokemonSchemaType => {
     return {
       image: image,
