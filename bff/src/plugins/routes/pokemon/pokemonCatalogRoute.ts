@@ -91,4 +91,3 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   )
 }
 export default pokemonCatalogRoute
-
