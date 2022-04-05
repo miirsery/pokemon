@@ -119,15 +119,20 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
 
   const maleGender = await fastify.axios.get('https://pokeapi.co/api/v2/gender/1/')
   const femaleGender = await fastify.axios.get('https://pokeapi.co/api/v2/gender/2/')
+  const genderless = await fastify.axios.get('https://pokeapi.co/api/v2/gender/3/')
 
   const pokemonListMale = maleGender.data.pokemon_species_details
   const pokemonListFemale = femaleGender.data.pokemon_species_details
+  const pokemonListGenderless = genderless.data.pokemon_species_details
 
-  const isPokemonGenderMale = () =>
+  const isPokemonGenderMale = (): boolean =>
     (pokemonListMale.filter(pokemon => pokemon['pokemon_species'].name === name).length > 0)
 
-  const isPokemonGenderFemale = () =>
+  const isPokemonGenderFemale = (): boolean =>
     (pokemonListFemale.filter(pokemon => pokemon['pokemon_species'].name === name).length > 0)
+
+  const isPokemonGenderless = (): boolean =>
+    (pokemonListGenderless.filter(pokemon => pokemon['pokemon_species'].name === name).length > 0)
 
 
   if (isPokemonGenderMale()) {
@@ -138,31 +143,24 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
     gender.push('female-gender')
   }
 
+  if (isPokemonGenderless())
+    gender.push('genderless')
+
   return gender
 }
 
 async function getEvolutionChain(evolvesTo, fastify): Promise<PokemonEvolutionType[]> {
   const evolutionChain: PokemonEvolutionType[] = []
 
-  const setCurrentPokemon = (name, id, image, types, stage): PokemonEvolutionType => {
-    return {
-      name,
-      id,
-      image,
-      types,
-      stage,
-    }
-  }
-
   const getAndAddEvolutionPokemon = async (slug: string, stage: number): Promise<void> => {
     const pokemon = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${slug}`)
-    evolutionChain.push(setCurrentPokemon(
-      pokemon.data.name,
-      pokemon.data.id,
-      pokemon.data.sprites.other['official-artwork']['front_default'],
-      pokemon.data.types.map(item => item['type']['name']),
-      stage)
-    )
+    evolutionChain.push({
+      name: pokemon.data.name,
+      id: pokemon.data.id,
+      image: pokemon.data.sprites.other['official-artwork']['front_default'],
+      types:  pokemon.data.types.map(item => item['type']['name']),
+      stage: stage
+    })
   }
 
   await getAndAddEvolutionPokemon(evolvesTo.species.name, 1)
