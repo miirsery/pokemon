@@ -190,7 +190,7 @@ export default defineComponent({
     }
 
     const pokemonDetailed: DetailedPokemonType = {
-      id: 51,
+      id: 56,
       name: 'Pokemon4ik',
       img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
       abilities: ['fire', 'storm'],
@@ -246,7 +246,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-detailed {
-  width: 70%;
+  width: 80%;
 
   &__title {
     margin-bottom: 2rem;

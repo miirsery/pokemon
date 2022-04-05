@@ -1,9 +1,8 @@
 <template>
-  <aside class="pokemon-sidebar" @click="handleClose">
-    <div class="pokemon-sidebar__wrapper" @click.stop>
-      <h3 class="pokemon-sidebar__title">Последнее просмотренное</h3>
+  <aside class="pokemon-sidebar">
+    <h3 class="pokemon-sidebar__title subtitle">Последнее просмотренное</h3>
+    <div class="pokemon-sidebar__wrapper">
       <div class="pokemon-sidebar__top">
-        <button class="pokemon-sidebar__close" @click="handleClose">X</button>
         <button class="pokemon-sidebar__clear" @click="handleClearPokemonList">
           Отчистить список
         </button>
@@ -73,6 +72,13 @@ export default defineComponent({
 <style scoped lang="scss">
 .pokemon-sidebar {
   &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: 300px;
+    height: 600px;
+
     &::-webkit-scrollbar-thumb {
       border: 5px solid #8278ee;
       border-radius: 100px;
@@ -97,9 +103,8 @@ export default defineComponent({
   }
 
   &__title {
-    margin: 1rem 0.5rem 0.5rem;
+    margin: 1rem 0;
     font-weight: 700;
-    font-size: 18px;
   }
 
   &__top {
@@ -111,8 +116,9 @@ export default defineComponent({
 
   &__item {
     display: flex;
+    flex-direction: column;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid $color-accent;
     padding: 15px;
     color: $color-dark-gray;
 
@@ -138,10 +144,6 @@ export default defineComponent({
     top: 50%;
     font-size: 0.9rem;
     transform: translateY(-50%);
-  }
-
-  &__close {
-    font-size: 1.1rem;
   }
 }
 

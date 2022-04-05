@@ -173,7 +173,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-catalog {
-  width: 70%;
+  width: 80%;
 
   &__top {
     display: flex;
