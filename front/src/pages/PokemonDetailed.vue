@@ -105,14 +105,30 @@
         <div class="pokemon-evolution">
           <h2 class="pokemon-evolution__title subtitle">Стадии эволюции</h2>
           <div class="pokemon-evolution__content">
-            <div class="first-pokemon">
-              <div class="first-pokemon__item pokemon-item">
-                <div class="pokemon-item__image">
-                  <img
-                    :src="detailedPokemon?.data?.image"
-                    :alt="detailedPokemon?.data?.name"
-                  />
-                </div>
+            <div
+              class="pokemon-item__stage"
+              v-for="(pokemonStage, index) in detailedPokemon?.data?.evolution"
+              :key="pokemonStage.name"
+              :class="{
+                'pokemon-item__stage-small':
+                  detailedPokemon?.data?.evolution[index].length > 3,
+              }"
+            >
+              <div
+                class="pokemon-item__wrapper"
+                v-for="pokemon in pokemonStage"
+                :key="pokemon.name"
+              >
+                <router-link
+                  :to="`/pokemon/${pokemon.id}`"
+                  class="pokemon-item__image"
+                  :class="{
+                    'pokemon-item__image-small': pokemonStage.length > 2,
+                  }"
+                  @click="getDetailedPokemon(pokemon.id)"
+                >
+                  <img :src="pokemon.image" :alt="pokemon.name" />
+                </router-link>
               </div>
             </div>
           </div>
@@ -131,6 +147,7 @@ import {
   ref,
 } from 'vue'
 import { pokemonAPI } from '@/api/pokemon.api'
+import { onBeforeRouteUpdate } from 'vue-router'
 
 export default defineComponent({
   name: 'PokemonDetailed',
@@ -152,7 +169,6 @@ export default defineComponent({
     let detailedPokemon = reactive({
       data: {},
     })
-
     const showDetailedAbility = ref(false)
     const nameOfAbility = ref('')
 
@@ -213,6 +229,10 @@ export default defineComponent({
       await setPokemonListInLocalStorage()
       await updateLocalStorage()
     }
+
+    onBeforeRouteUpdate(async (to) => {
+      await getDetailedPokemon(to.params.id)
+    })
 
     onMounted(() => {
       getDetailedPokemon(props.id)
@@ -484,6 +504,7 @@ export default defineComponent({
 
   &__image {
     position: relative;
+    display: block;
     margin-bottom: 1rem;
     border: 5px solid $color-white;
     border-radius: 50%;
@@ -491,6 +512,11 @@ export default defineComponent({
     height: 160px;
     box-shadow: -2px 6px 15px $color-dark-gray;
     background-color: $color-medium-gray;
+
+    &-small {
+      width: 120px;
+      height: 120px;
+    }
 
     img {
       position: absolute;
@@ -542,6 +568,20 @@ export default defineComponent({
 
     &:first-child {
       margin-right: 1rem;
+    }
+  }
+
+  &__stage {
+    max-width: 70%;
+    gap: 30px;
+
+    &-small {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &:first-child {
+      margin-right: 5rem;
     }
   }
 }

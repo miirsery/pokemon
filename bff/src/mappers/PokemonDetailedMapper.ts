@@ -28,7 +28,7 @@ export class PokemonDetailedMapper {
     abilities: AbilitiesType[],
     genders: string[],
     genera: any[],
-    evolution: PokemonEvolutionType[],
+    evolution: any,
   ): PokemonSchemaType => {
     return {
       id: id,

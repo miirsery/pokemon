@@ -24,9 +24,10 @@ const PokemonEvolutionSchema = Type.Object({
   stage: Type.Number()
 })
 
-const PokemonGeneraSchema = Type.Object({
-  genus: Type.String(),
-})
+const StageSchema = Type.Optional(Object({
+  stage: PokemonEvolutionSchema
+}))
+
 
 const PokemonSchema = Type.Object({
   id: Type.Number(),
@@ -39,7 +40,7 @@ const PokemonSchema = Type.Object({
   abilities: Type.Array(PokemonAbilities),
   genders: Type.Array(Type.String()),
   genera: Type.Array(Type.String()),
-  evolution: Type.Array(PokemonEvolutionSchema),
+  evolution: StageSchema,
 })
 
 const ResponseSchema = Type.Object({
@@ -149,20 +150,43 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
   return gender
 }
 
-async function getEvolutionChain(evolvesTo, fastify): Promise<PokemonEvolutionType[]> {
-  const evolutionChain: PokemonEvolutionType[] = []
+async function getEvolutionChain(evolvesTo, fastify): Promise<any[]> {
+  let evolutionChain: any[] = []
+  const stage1: any[] = []
+  const stage2: any[] = []
+  const stage3: any[] = []
 
   const getAndAddEvolutionPokemon = async (slug: string, stage: number): Promise<void> => {
     const pokemon = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${slug}`)
-    evolutionChain.push({
-      name: pokemon.data.name,
-      id: pokemon.data.id,
-      image: pokemon.data.sprites.other['official-artwork']['front_default'],
-      types:  pokemon.data.types.map(item => item['type']['name']),
-      stage: stage
-    })
+    if (stage === 1) {
+      stage1.push({
+        name: pokemon.data.name,
+        id: pokemon.data.id,
+        image: pokemon.data.sprites.other['official-artwork']['front_default'],
+        types:  pokemon.data.types.map(item => item['type']['name']),
+        stage: stage
+      })
+    }
+    if (stage === 2) {
+      stage2.push({
+        name: pokemon.data.name,
+        id: pokemon.data.id,
+        image: pokemon.data.sprites.other['official-artwork']['front_default'],
+        types:  pokemon.data.types.map(item => item['type']['name']),
+        stage: stage
+      })
+    }
+    if (stage === 3) {
+      stage3.push({
+        name: pokemon.data.name,
+        id: pokemon.data.id,
+        image: pokemon.data.sprites.other['official-artwork']['front_default'],
+        types:  pokemon.data.types.map(item => item['type']['name']),
+        stage: stage
+      })
+    }
+    evolutionChain = [stage1, stage2, stage3]
   }
-
   await getAndAddEvolutionPokemon(evolvesTo.species.name, 1)
 
   for (const prop of evolvesTo['evolves_to']) {
@@ -171,7 +195,6 @@ async function getEvolutionChain(evolvesTo, fastify): Promise<PokemonEvolutionTy
       await getAndAddEvolutionPokemon(deepProp.species.name, 3)
     }
   }
-
   return evolutionChain
 }
 

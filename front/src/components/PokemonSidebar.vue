@@ -30,12 +30,12 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue'
-
+import { onBeforeRouteUpdate } from 'vue-router'
 export default defineComponent({
   props: {
     isUpdated: Boolean,
   },
-  emits: ['updateValue'],
+  emits: ['updateValue', 'getPokemon'],
   setup(props, { emit }) {
     type PokemonType = {
       pokemon: {

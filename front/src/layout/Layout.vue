@@ -2,9 +2,10 @@
   <div class="content">
     <pokemon-header />
     <div class="content__wrapper">
-      <router-view @update="updateLocalStorage" />
+      <router-view ref="PokemonDetailed" @update="updateLocalStorage" />
       <pokemon-sidebar
         @updateValue="updateLocalStorage"
+        @getPokemon="getPokemonList"
         :isUpdated="isUpdated"
       />
     </div>
@@ -25,16 +26,22 @@ export default defineComponent({
     PokemonFooter,
     PokemonSidebar,
   },
-  setup() {
+  setup(props, context) {
     let isUpdated = ref(false)
+    let isGetPokemon = ref(false)
 
     const updateLocalStorage = (value) => {
       isUpdated.value = value
     }
 
+    const getPokemonList = (value): void => {
+      isGetPokemon.value = value
+    }
+
     return {
       updateLocalStorage,
       isUpdated,
+      getPokemonList,
     }
   },
 })
