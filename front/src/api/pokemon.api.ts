@@ -23,6 +23,13 @@ class PokemonAPI extends AxiosService {
       url: `/api/pokemon/${id}`,
     })
   }
+
+  public getDescriptionOfAbility(name: string) {
+    return this.axiosCall({
+      method: 'get',
+      url: `/api/ability/${name}`,
+    })
+  }
 }
 
 export const pokemonAPI = new PokemonAPI({

@@ -16,7 +16,12 @@
             />
           </div>
           <div class="pokemon-main__right">
-            <div class="pokemon-info">
+            <pokemon-detailed-ability
+              @close="toggleDetailedAbility"
+              v-if="showDetailedAbility"
+              :name="nameOfAbility"
+            />
+            <div class="pokemon-info" v-else>
               <div class="pokemon-info__item-left">
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Height</h4>
@@ -52,6 +57,7 @@
                     class="pokemon-info__item-value ability"
                     v-for="ability in detailedPokemon.data['abilities']"
                     :key="ability.name"
+                    @click="toggleDetailedAbility(ability.name)"
                   >
                     {{ ability.name.replace('-', ' ') }}
                   </p>
@@ -117,7 +123,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue'
+import {
+  defineAsyncComponent,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+} from 'vue'
 import { pokemonAPI } from '@/api/pokemon.api'
 
 export default defineComponent({
@@ -129,12 +141,30 @@ export default defineComponent({
       required: true,
     },
   },
+  components: {
+    PokemonDetailedAbility: defineAsyncComponent(
+      () => import('@/components/PokemonDetailedAbility.vue')
+    ),
+  },
   setup(props, { emit }) {
     type ToExcludeFieldsType = 'abilities' | 'stats'
 
     let detailedPokemon = reactive({
       data: {},
     })
+
+    const showDetailedAbility = ref(false)
+    const nameOfAbility = ref('')
+
+    const setDetailedAbilityName = (name): void => {
+      nameOfAbility.value = name
+    }
+    const toggleDetailedAbility = (name): void => {
+      showDetailedAbility.value = !showDetailedAbility.value
+      if (name !== undefined) {
+        setDetailedAbilityName(name)
+      }
+    }
 
     type LocalStoragePokemonType = {
       id: number
@@ -189,6 +219,9 @@ export default defineComponent({
     })
     return {
       detailedPokemon,
+      toggleDetailedAbility,
+      nameOfAbility,
+      showDetailedAbility,
       getDetailedPokemon,
     }
   },
