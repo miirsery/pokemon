@@ -107,7 +107,9 @@
                   :key="pokemonIndex"
                 ></li>
               </ul>
-              <span>{{ item.name }}</span>
+              <span class="pokemon-stats__item-name">
+                {{ item.name.replace('-', ' ') }}
+              </span>
             </li>
           </ul>
         </div>
@@ -452,8 +454,9 @@ export default defineComponent({
     width: 15%;
     text-align: center;
 
-    span {
+    &-name {
       display: block;
+      text-transform: capitalize;
       color: $color-medium-gray;
     }
   }
@@ -602,6 +605,7 @@ export default defineComponent({
 
   &__name {
     margin-right: 0.3rem;
+    margin-bottom: 0.5rem;
     font-weight: 700;
     font-size: 1.1rem;
     text-transform: capitalize;
