@@ -38,7 +38,7 @@ const PokemonSchema = Type.Object({
   stats: Type.Array(PokemonStatsSchema),
   abilities: Type.Array(PokemonAbilities),
   genders: Type.Array(Type.String()),
-  genera: Type.Array(PokemonGeneraSchema),
+  genera: Type.Array(Type.String()),
   evolution: Type.Array(PokemonEvolutionSchema),
 })
 

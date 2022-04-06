@@ -1,6 +1,8 @@
 <template>
   <aside class="pokemon-sidebar">
-    <h3 class="pokemon-sidebar__title subtitle">Последнее просмотренное</h3>
+    <h3 class="pokemon-sidebar__title subtitle" @click="getPokemonList">
+      Последнее просмотренное
+    </h3>
     <div class="pokemon-sidebar__wrapper">
       <div class="pokemon-sidebar__top">
         <button class="pokemon-sidebar__clear" @click="handleClearPokemonList">
@@ -13,10 +15,9 @@
           v-for="pokemon in pokemonListValues"
           :key="pokemon.name"
           :to="{ name: 'PokemonDetailed', params: { id: pokemon.id } }"
-          @click="handleClose"
         >
           <div class="pokemon-sidebar__item-img">
-            <img :src="pokemon.img" :alt="pokemon.name" />
+            <img :src="pokemon.image" :alt="pokemon.name" />
           </div>
           <div class="pokemon__info">
             <p class="pokemon__info-id subtitle">№{{ pokemon.id }}</p>
@@ -28,10 +29,13 @@
   </aside>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted, watch } from 'vue'
 
 export default defineComponent({
-  emits: ['close'],
+  props: {
+    isUpdated: Boolean,
+  },
+  emits: ['updateValue'],
   setup(props, { emit }) {
     type PokemonType = {
       pokemon: {
@@ -40,30 +44,42 @@ export default defineComponent({
         img: string
       }
     }
+    let pokemonList: any = {}
+    let pokemonListValues = ref<PokemonType[]>()
 
-    const pokemonList: PokemonType[] = JSON.parse(
-      localStorage.getItem('pokemon-list')
-    )
-
-    const pokemonListValues = ref<PokemonType[]>(pokemonList)
-    if (pokemonList) {
+    const getPokemonList = async () => {
+      pokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
       pokemonListValues.value = pokemonList
+      await emit('updateValue', false)
     }
 
-    const handleClose = (): void => {
-      emit('close')
+    watch(
+      () => props.isUpdated,
+      (val, _) => {
+        if (val) {
+          getPokemonList()
+        }
+      }
+    )
+
+    getPokemonList()
+
+    if (pokemonList) {
+      pokemonListValues.value = pokemonList
     }
 
     const handleClearPokemonList = (): void => {
       localStorage.removeItem('pokemon-list')
       pokemonListValues.value = []
     }
-
+    onMounted(() => {
+      emit('updateValue', false)
+    })
     return {
       pokemonListValues,
       pokemonList,
+      getPokemonList,
       handleClearPokemonList,
-      handleClose,
     }
   },
 })
@@ -105,6 +121,7 @@ export default defineComponent({
   &__title {
     margin: 1rem 0;
     font-weight: 700;
+    cursor: pointer;
   }
 
   &__top {

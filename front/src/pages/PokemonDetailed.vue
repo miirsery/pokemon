@@ -2,17 +2,17 @@
   <div class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
-        {{ detailedPokemon['name'] }}
+        {{ detailedPokemon.data['name'] }}
         <span class="pokemon-detailed__id">
-          №{{ detailedPokemon['id']?.toString().padStart(4, '0') }}
+          №{{ detailedPokemon.data['id']?.toString().padStart(4, '0') }}
         </span>
       </h2>
       <div class="pokemon-main">
         <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
             <img
-              :src="detailedPokemon['image']"
-              :alt="detailedPokemon['name']"
+              :src="detailedPokemon.data['image']"
+              :alt="detailedPokemon.data['name']"
             />
           </div>
           <div class="pokemon-main__right">
@@ -21,19 +21,19 @@
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Height</h4>
                   <p class="pokemon-info__item-value">
-                    {{ detailedPokemon['height'] }} m
+                    {{ detailedPokemon.data['height'] / 10 }} m
                   </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Weight</h4>
                   <p class="pokemon-info__item-value">
-                    {{ detailedPokemon['weight'] }} kg
+                    {{ detailedPokemon.data['weight'] / 10 }} kg
                   </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Gender</h4>
                   <div class="pokemon-info__item-value">
-                    <span v-for="gender in detailedPokemon['genders']">
+                    <span v-for="gender in detailedPokemon.data['genders']">
                       <icon-template :name="gender" width="24" height="24" />
                     </span>
                   </div>
@@ -43,14 +43,14 @@
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Category</h4>
                   <p class="pokemon-info__item-value">
-                    {{ detailedPokemon['category'] }}
+                    {{ detailedPokemon?.data?.genera?.shift() }}
                   </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Abilities</h4>
                   <p
                     class="pokemon-info__item-value ability"
-                    v-for="ability in detailedPokemon['abilities']"
+                    v-for="ability in detailedPokemon.data['abilities']"
                     :key="ability.name"
                   >
                     {{ ability.name.replace('-', ' ') }}
@@ -63,7 +63,7 @@
               <div class="pokemon-elements__actions">
                 <button
                   class="pokemon-elements__type"
-                  v-for="type in detailedPokemon['types']"
+                  v-for="type in detailedPokemon.data['types']"
                   :key="type"
                   :class="`type-${type.name}`"
                 >
@@ -78,7 +78,7 @@
           <ul class="pokemon-stats__menu">
             <li
               class="pokemon-stats__item"
-              v-for="(item, index) in detailedPokemon['stats']"
+              v-for="(item, index) in detailedPokemon.data['stats']"
               :key="item.name"
             >
               <ul class="pokemon-stats__gauge">
@@ -102,7 +102,10 @@
             <div class="first-pokemon">
               <div class="first-pokemon__item pokemon-item">
                 <div class="pokemon-item__image">
-                  <img src="www" alt="" />
+                  <img
+                    :src="detailedPokemon?.data?.image"
+                    :alt="detailedPokemon?.data?.name"
+                  />
                 </div>
               </div>
             </div>
@@ -114,94 +117,49 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { pokemonAPI } from '@/api/pokemon.api'
-import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'PokemonDetailed',
+  emits: ['update'],
   props: {
     id: {
       type: String,
       required: true,
     },
   },
-  setup(props) {
-    type DetailedPokemonStatsType = {
-      stat: number
-      name: string
-    }
-
-    type DetailedPokemonType = {
-      id: number
-      name: string
-      img: string
-      abilities: string[]
-      stats: DetailedPokemonStatsType[]
-    }
-
-    const pokemonDetailed: DetailedPokemonType = {
-      id: 51,
-      name: 'Pokemon4ik',
-      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
-      abilities: ['fire', 'storm'],
-      stats: [
-        {
-          stat: 48,
-          name: 'hp',
-        },
-      ],
-    }
-
+  setup(props, { emit }) {
     type ToExcludeFieldsType = 'abilities' | 'stats'
 
-    const localStoragePokemon: Partial<
-      Omit<DetailedPokemonType, ToExcludeFieldsType>
-    > = {
-      id: pokemonDetailed.id,
-      name: pokemonDetailed.name,
-      img: pokemonDetailed.img,
+    let detailedPokemon = reactive({
+      data: {},
+    })
+
+    type LocalStoragePokemonType = {
+      id: number
+      name: string
+      image: string
     }
 
-    const oldPokemonList: typeof localStoragePokemon[] = JSON.parse(
+    let localStoragePokemon = ref({})
+
+    const oldPokemonList: any[] = JSON.parse(
       localStorage.getItem('pokemon-list')
     )
-    let detailedPokemon = reactive({})
-    // let filteredIdData = ref<string>('')
-    const route = useRoute()
-
-    const getDetailedPokemon = async (id) => {
-      //let currentId = ref(props.id)
-      console.log(id)
-      const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
-      console.log(detailedPokemonData.pokemon)
-      detailedPokemon = detailedPokemonData.pokemon
-      //detailedPokemon = detailedPokemonData
-      // detailedPokemon['id'] = detailedPokemonData.pokemon.id
-      // detailedPokemon['name'] = detailedPokemonData.pokemon.name
-      // detailedPokemon['image'] = detailedPokemonData.pokemon.image
-      // detailedPokemon['height'] = detailedPokemonData.pokemon.height / 10
-      // detailedPokemon['weight'] = detailedPokemonData.pokemon.weight / 10
-      // detailedPokemon['types'] = detailedPokemonData.pokemon.types
-      // detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
-      // detailedPokemon['category'] =
-      //   detailedPokemonData.pokemon.genera[0].genus.replace('Pokémon', '')
-      // detailedPokemon['abilities'] = detailedPokemonData.pokemon.abilities
-      // detailedPokemon['genders'] = detailedPokemonData.pokemon.genders
-      // detailedPokemon['stats'] = detailedPokemonData.pokemon.stats
-      // detailedPokemon['evolution'] =
-      //   detailedPokemonData.pokemon.evolution.reverse()
+    const updateLocalStorage = async () => {
+      emit('update', true)
     }
-    const setPokemonListInLocalStorage = () => {
+    const setPokemonListInLocalStorage = async () => {
       if (oldPokemonList) {
         let newPokemonList = oldPokemonList
         newPokemonList.forEach((pokemon, index) => {
-          if (pokemon.id === localStoragePokemon.id) {
+          if (pokemon.id === localStoragePokemon.value['id']) {
             newPokemonList.splice(index, 1)
           }
         })
 
-        newPokemonList.unshift(localStoragePokemon)
+        newPokemonList.unshift(localStoragePokemon.value)
         if (newPokemonList.length > 5) {
           newPokemonList.pop()
         }
@@ -209,20 +167,29 @@ export default defineComponent({
       } else {
         localStorage.setItem(
           'pokemon-list',
-          JSON.stringify([localStoragePokemon])
+          JSON.stringify([localStoragePokemon.value])
         )
       }
     }
 
+    const getDetailedPokemon = async (id) => {
+      const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
+      detailedPokemon.data = detailedPokemonData.pokemon
+      localStoragePokemon.value = {
+        id: detailedPokemon.data['id'],
+        name: detailedPokemon.data['name'],
+        image: detailedPokemon.data['image'],
+      }
+      await setPokemonListInLocalStorage()
+      await updateLocalStorage()
+    }
+
     onMounted(() => {
       getDetailedPokemon(props.id)
-      setPokemonListInLocalStorage()
     })
     return {
-      pokemonDetailed,
       detailedPokemon,
       getDetailedPokemon,
-      // filteredIdData,
     }
   },
 })
@@ -230,6 +197,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-detailed {
+  width: 80%;
+
   &__title {
     margin-bottom: 2rem;
     width: 100%;

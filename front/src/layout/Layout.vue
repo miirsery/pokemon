@@ -2,8 +2,11 @@
   <div class="content">
     <pokemon-header />
     <div class="content__wrapper">
-      <router-view />
-      <pokemon-sidebar />
+      <router-view @update="updateLocalStorage" />
+      <pokemon-sidebar
+        @updateValue="updateLocalStorage"
+        :isUpdated="isUpdated"
+      />
     </div>
   </div>
   <pokemon-footer />
@@ -23,13 +26,15 @@ export default defineComponent({
     PokemonSidebar,
   },
   setup() {
-    const showSidebar = ref(true)
-    const handleToggleSidebar = (): void => {
-      showSidebar.value = !showSidebar.value
+    let isUpdated = ref(false)
+
+    const updateLocalStorage = (value) => {
+      isUpdated.value = value
     }
+
     return {
-      handleToggleSidebar,
-      showSidebar,
+      updateLocalStorage,
+      isUpdated,
     }
   },
 })
@@ -42,13 +47,5 @@ export default defineComponent({
   &__wrapper {
     display: flex;
   }
-}
-
-.toggle-sidebar-icon {
-  position: fixed;
-  right: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
 }
 </style>

@@ -27,7 +27,7 @@ export class PokemonDetailedMapper {
     stats: StatsType[],
     abilities: AbilitiesType[],
     genders: string[],
-    genera: PokemonGeneraType[],
+    genera: any[],
     evolution: PokemonEvolutionType[],
   ): PokemonSchemaType => {
     return {
@@ -42,8 +42,9 @@ export class PokemonDetailedMapper {
       ),
       abilities: abilities.map(item => item['ability']),
       genders: genders,
-      genera: genera.filter(item =>
-        (item['language'].name === 'en' && item.genus)),
+      genera: genera.map(item =>
+        (item['language'].name === 'en' && item.genus.replace('Pokémon', '').trim())
+      ).filter(item => item.length > 0),
       evolution: evolution
     }
   }
