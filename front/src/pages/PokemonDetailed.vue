@@ -1,6 +1,15 @@
 <template>
   <div class="pokemon-detailed">
-    <div class="pokemon-detailed__container pokemon-detailed__wrapper">
+    <div v-if="isLoading">
+      <el-skeleton />
+      <br />
+      <el-skeleton class="circle">
+        <template #template>
+          <el-skeleton-item variant="circle" />
+        </template>
+      </el-skeleton>
+    </div>
+    <div v-else class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
         {{ detailedPokemon.data['name'] }}
         <span class="pokemon-detailed__id">
@@ -115,6 +124,10 @@
               }"
             >
               <div
+                v-if="detailedPokemon?.data?.evolution[index].stage.length > 3"
+                class="pokemon-item__arrow"
+              ></div>
+              <div
                 class="pokemon-item__wrapper"
                 v-for="pokemon in pokemonStage.stage"
                 :key="pokemon.name"
@@ -187,7 +200,7 @@ export default defineComponent({
     })
     const showDetailedAbility = ref(false)
     const nameOfAbility = ref('')
-
+    const isLoading = ref(true)
     const setDetailedAbilityName = (name): void => {
       nameOfAbility.value = name
     }
@@ -234,7 +247,13 @@ export default defineComponent({
       }
     }
 
+    const clearPage = (): void => {
+      isLoading.value = true
+      detailedPokemon.data = []
+    }
+
     const getDetailedPokemon = async (id) => {
+      clearPage()
       const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
       detailedPokemon.data = detailedPokemonData.pokemon
       localStoragePokemon.value = {
@@ -242,6 +261,7 @@ export default defineComponent({
         name: detailedPokemon.data['name'],
         image: detailedPokemon.data['image'],
       }
+      isLoading.value = false
       await setPokemonListInLocalStorage()
       await updateLocalStorage()
     }
@@ -257,6 +277,7 @@ export default defineComponent({
       detailedPokemon,
       toggleDetailedAbility,
       nameOfAbility,
+      isLoading,
       showDetailedAbility,
       getDetailedPokemon,
     }
@@ -267,6 +288,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .pokemon-detailed {
   width: 80%;
+  min-height: 110vh;
 
   &__title {
     margin-bottom: 2rem;
@@ -530,12 +552,13 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 4rem;
 
     &::before {
       content: '';
       position: absolute;
-      left: -2rem;
-      top: 50%;
+      left: -7rem;
+      top: 36%;
       border-top: 6px solid $color-white;
       border-right: 6px solid $color-white;
       width: 60px;
@@ -615,6 +638,18 @@ export default defineComponent({
     }
   }
 
+  &__arrow {
+    position: absolute;
+    left: -11rem;
+    top: 36%;
+    border-top: 6px solid $color-white;
+    border-right: 6px solid $color-white;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
   &__stage {
     position: relative;
     max-width: 70%;
@@ -623,11 +658,35 @@ export default defineComponent({
     &-small {
       display: flex;
       flex-wrap: wrap;
+      margin: 0 0 0 5rem !important;
+
+      .pokemon-item__image {
+        width: 100px;
+        height: 100px;
+      }
+
+      .pokemon-item__wrapper {
+        &::before {
+          display: none;
+        }
+      }
     }
 
     &:not(:last-child) {
-      margin-right: 5rem;
+      margin-right: 8rem;
+    }
+
+    &:first-child {
+      .pokemon-item__wrapper {
+        &::before {
+          display: none;
+        }
+      }
     }
   }
+}
+
+.circle {
+  width: 100px;
 }
 </style>
