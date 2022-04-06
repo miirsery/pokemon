@@ -76,6 +76,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
+    border-left: 1px solid $color-accent;
     width: 300px;
     height: 600px;
 
