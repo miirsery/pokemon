@@ -1,15 +1,21 @@
 <template>
-  <div class="pokemon-detailed-ability">
-    <div
-      class="pokemon-detailed-ability__close"
-      @click="handleCloseDetailedAbility"
-    >
-      X
+  <Transition name="pokemon-detailed-ability">
+    <div class="pokemon-detailed-ability">
+      <div class="pokemon-detailed-ability__top">
+        <h3 class="pokemon-detailed-ability__title">Ability info</h3>
+        <div
+          class="pokemon-detailed-ability__close"
+          @click="handleCloseDetailedAbility"
+        >
+          <i class="pokemon-detailed-ability__close-icon">X</i>
+          <span class="pokemon-detailed-ability__close-text">Close</span>
+        </div>
+      </div>
+      <p class="pokemon-detailed-ability__text">
+        {{ description }}
+      </p>
     </div>
-    <p class="pokemon-detailed-ability__text">
-      {{ description }}
-    </p>
-  </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -52,7 +58,20 @@ export default defineComponent({
   padding: 15px;
   width: 60%;
   height: 171px;
-  background-color: $color-dark-gray;
+  background-color: $color-before-dark-gray;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    margin-bottom: 1rem;
+    font-weight: 300;
+    font-size: 0.9rem;
+    color: $color-light-gray;
+  }
 
   &__text {
     color: $color-white;
@@ -62,10 +81,35 @@ export default defineComponent({
     position: absolute;
     right: 10px;
     top: 10px;
+    margin-top: -10px;
+    margin-right: -10px;
+    border-top-right-radius: 10px;
+    padding: 10px 14px;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: $color-white;
+    background: $color-black;
     cursor: pointer;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 18px;
+      height: 18px;
+      background: center/ cover no-repeat
+        url('../assets/images/cut-corner-ability.png');
+    }
+
+    &-icon {
+      margin-left: 0.5rem;
+    }
+
+    &-text {
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
   }
 }
 </style>
