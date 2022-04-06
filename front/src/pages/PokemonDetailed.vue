@@ -108,15 +108,15 @@
             <div
               class="pokemon-item__stage"
               v-for="(pokemonStage, index) in detailedPokemon?.data?.evolution"
-              :key="pokemonStage.name"
+              :key="pokemonStage.stage.name"
               :class="{
                 'pokemon-item__stage-small':
-                  detailedPokemon?.data?.evolution[index].length > 3,
+                  detailedPokemon?.data?.evolution[index].stage.length > 3,
               }"
             >
               <div
                 class="pokemon-item__wrapper"
-                v-for="pokemon in pokemonStage"
+                v-for="pokemon in pokemonStage.stage"
                 :key="pokemon.name"
               >
                 <router-link
@@ -129,6 +129,22 @@
                 >
                   <img :src="pokemon.image" :alt="pokemon.name" />
                 </router-link>
+                <h3 class="pokemon-item__name">
+                  {{ pokemon?.name.replace('-', ' ') }}
+                </h3>
+                <p class="pokemon-item__id">
+                  №{{ pokemon.id.toString().padStart(4, '0') }}
+                </p>
+                <div class="pokemon-item__types">
+                  <p
+                    class="pokemon-item__type"
+                    v-for="type in pokemon.types"
+                    :key="type"
+                    :class="`type-${type}`"
+                  >
+                    {{ type }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -473,6 +489,13 @@ export default defineComponent({
     }
   }
 
+  &__title {
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: $color-white;
+  }
+
   &__small {
     display: flex;
     align-items: center;
@@ -502,6 +525,26 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
 
+  &__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 50%;
+      border-top: 6px solid $color-white;
+      border-right: 6px solid $color-white;
+      width: 60px;
+      height: 60px;
+      background-color: transparent;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
   &__image {
     position: relative;
     display: block;
@@ -514,8 +557,8 @@ export default defineComponent({
     background-color: $color-medium-gray;
 
     &-small {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
     }
 
     img {
@@ -538,6 +581,7 @@ export default defineComponent({
     margin-right: 0.3rem;
     font-weight: 700;
     font-size: 1.1rem;
+    text-transform: capitalize;
     color: $color-white;
   }
 
@@ -572,6 +616,7 @@ export default defineComponent({
   }
 
   &__stage {
+    position: relative;
     max-width: 70%;
     gap: 30px;
 
@@ -580,7 +625,7 @@ export default defineComponent({
       flex-wrap: wrap;
     }
 
-    &:first-child {
+    &:not(:last-child) {
       margin-right: 5rem;
     }
   }

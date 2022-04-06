@@ -41,7 +41,6 @@ export default defineComponent({
     onMounted(() => {
       getDescriptionOfAbility()
     })
-    console.log(description)
     return {
       handleCloseDetailedAbility,
       description,

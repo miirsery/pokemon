@@ -185,7 +185,7 @@ async function getEvolutionChain(evolvesTo, fastify): Promise<any[]> {
         stage: stage
       })
     }
-    evolutionChain = [stage1, stage2, stage3]
+    evolutionChain = [{ stage: stage1 }, { stage: stage2 }, { stage: stage3 }]
   }
   await getAndAddEvolutionPokemon(evolvesTo.species.name, 1)
 
