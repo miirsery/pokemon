@@ -1,19 +1,11 @@
 <template>
-  <div class="pokemon-detailed">
-    <div v-if="isLoading">
-      <el-skeleton />
-      <br />
-      <el-skeleton class="circle">
-        <template #template>
-          <el-skeleton-item variant="circle" />
-        </template>
-      </el-skeleton>
-    </div>
-    <div v-else class="pokemon-detailed__container pokemon-detailed__wrapper">
+  <pokemon-detailed-preloader v-if="isLoading" />
+  <div v-else class="pokemon-detailed">
+    <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
         {{ detailedPokemon.data['name'] }}
         <span class="pokemon-detailed__id">
-          №{{ detailedPokemon.data['id']?.toString().padStart(4, '0') }}
+          №{{ filteredId(detailedPokemon.data['id']) }}
         </span>
       </h2>
       <div class="pokemon-main">
@@ -147,9 +139,7 @@
                 <h3 class="pokemon-item__name">
                   {{ pokemon?.name.replace('-', ' ') }}
                 </h3>
-                <p class="pokemon-item__id">
-                  №{{ pokemon.id.toString().padStart(4, '0') }}
-                </p>
+                <p class="pokemon-item__id">№{{ filteredId(pokemon.id) }}</p>
                 <div class="pokemon-item__types">
                   <p
                     class="pokemon-item__type"
@@ -171,6 +161,7 @@
 
 <script lang="ts">
 import {
+  computed,
   defineAsyncComponent,
   defineComponent,
   onMounted,
@@ -193,13 +184,17 @@ export default defineComponent({
     PokemonDetailedAbility: defineAsyncComponent(
       () => import('@/components/PokemonDetailedAbility.vue')
     ),
+    PokemonDetailedPreloader: defineAsyncComponent(
+      () => import('@/components/PokemonDetailedPreloader.vue')
+    ),
   },
-  setup(props, { emit }) {
+  setup: function (props, { emit }) {
     type ToExcludeFieldsType = 'abilities' | 'stats'
 
     let detailedPokemon = reactive({
       data: {},
     })
+
     const showDetailedAbility = ref(false)
     const nameOfAbility = ref('')
     const isLoading = ref(true)
@@ -249,6 +244,8 @@ export default defineComponent({
       }
     }
 
+    const filteredId = (id) => id.toString().padStart(4, '0')
+
     const clearPage = (): void => {
       isLoading.value = true
       detailedPokemon.data = []
@@ -259,7 +256,7 @@ export default defineComponent({
       const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
       detailedPokemon.data = detailedPokemonData.pokemon
       localStoragePokemon.value = {
-        id: detailedPokemon.data['id'],
+        id: filteredId(detailedPokemon.data['id']),
         name: detailedPokemon.data['name'],
         image: detailedPokemon.data['image'],
       }
@@ -280,6 +277,7 @@ export default defineComponent({
       toggleDetailedAbility,
       nameOfAbility,
       isLoading,
+      filteredId,
       showDetailedAbility,
       getDetailedPokemon,
     }

@@ -171,6 +171,10 @@ export default defineComponent({
       font-size: 1rem;
       color: $color-dark-gray;
     }
+
+    &-title {
+      text-transform: capitalize;
+    }
   }
 }
 </style>
