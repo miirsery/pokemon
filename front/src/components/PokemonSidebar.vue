@@ -46,9 +46,7 @@ export default defineComponent({
     )
 
     const pokemonListValues = ref<PokemonType[]>(pokemonList)
-    if (pokemonList) {
-      pokemonListValues.value = pokemonList
-    }
+    pokemonListValues.value = pokemonList
 
     const handleClose = (): void => {
       emit('close')

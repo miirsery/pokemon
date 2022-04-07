@@ -27,7 +27,7 @@
         background
         layout="prev, pager, next"
         :total="pokemons[0].meta.totalPages * 10"
-        @sizeChange="handleSizeChange"
+        @sise-change="handleSizeChange"
         @current-change="handleChangeCurrentPage"
         class="pokemon-catalog__pagination"
       />
