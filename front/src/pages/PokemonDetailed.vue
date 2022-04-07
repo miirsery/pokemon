@@ -8,7 +8,7 @@
       <div class="pokemon-main">
         <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
-            <img :src="pokemon.url" :alt="name" />
+            <img :src="pokemonDetailed.img" :alt="name" />
           </div>
           <div class="pokemon-main__right">
             <div class="pokemon-info">
@@ -97,7 +97,7 @@
             <div class="pokemon-evolution__item">
               <router-link to="#">
                 <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+                  <img :src="pokemonDetailed.img" alt="pokemon" />
                 </div>
                 <h3 class="pokemon-evolution__item-title">
                   Wigglytuff
@@ -118,7 +118,7 @@
             <div class="pokemon-evolution__item">
               <router-link to="#">
                 <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+                  <img :src="pokemonDetailed.img" alt="pokemon" />
                 </div>
                 <h3 class="pokemon-evolution__item-title">
                   Wigglytuff
@@ -139,7 +139,7 @@
             <div class="pokemon-evolution__item">
               <router-link to="#">
                 <div class="pokemon-evolution__item-img">
-                  <img :src="pokemon.url" alt="pokemon" />
+                  <img :src="pokemonDetailed.img" alt="pokemon" />
                 </div>
                 <h3 class="pokemon-evolution__item-title">
                   Wigglytuff
@@ -165,23 +165,80 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 
 export default defineComponent({
   name: 'PokemonDetailed',
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
-    type PokemonType = {
+    type DetailedPokemonStatsType = {
+      stat: number
+      name: string
+    }
+
+    type DetailedPokemonType = {
       id: number
-      url: string
+      name: string
+      img: string
+      abilities: string[]
+      stats: DetailedPokemonStatsType[]
     }
-    const pokemon: PokemonType = {
-      id: 44,
-      url: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
+
+    const pokemonDetailed: DetailedPokemonType = {
+      id: 56,
+      name: 'Pokemon4ik',
+      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
+      abilities: ['fire', 'storm'],
+      stats: [
+        {
+          stat: 48,
+          name: 'hp',
+        },
+      ],
     }
-    const filteredId = computed(() => pokemon.id.toString().padStart(4, '0'))
+
+    type ToExcludeFieldsType = 'abilities' | 'stats'
+
+    const localStoragePokemon: Partial<
+      Omit<DetailedPokemonType, ToExcludeFieldsType>
+    > = {
+      id: pokemonDetailed.id,
+      name: pokemonDetailed.name,
+      img: pokemonDetailed.img,
+    }
+
+    const oldPokemonList: typeof localStoragePokemon[] = JSON.parse(
+      localStorage.getItem('pokemon-list')
+    )
+
+    onMounted((): void => {
+      if (oldPokemonList) {
+        let newPokemonList = oldPokemonList
+        newPokemonList.forEach((pokemon, index) => {
+          if (pokemon.id === localStoragePokemon.id) {
+            newPokemonList.splice(index, 1)
+          }
+        })
+
+        newPokemonList.unshift(localStoragePokemon)
+        if (newPokemonList.length > 5) {
+          newPokemonList.pop()
+        }
+        localStorage.setItem('pokemon-list', JSON.stringify(newPokemonList))
+      } else {
+        localStorage.setItem(
+          'pokemon-list',
+          JSON.stringify([localStoragePokemon])
+        )
+      }
+    })
     return {
-      pokemon,
-      filteredId,
+      pokemonDetailed,
     }
   },
 })
@@ -189,6 +246,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-detailed {
+  width: 80%;
+
   &__title {
     margin-bottom: 2rem;
     width: 100%;

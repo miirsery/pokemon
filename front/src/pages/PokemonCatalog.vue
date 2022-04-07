@@ -27,9 +27,9 @@
         background
         layout="prev, pager, next"
         :total="pokemons[0].meta.totalPages * 10"
-        @sizeChange="handleSizeChange"
+        @sise-change="handleSizeChange"
         @current-change="handleChangeCurrentPage"
-        class="pokemon-catalog__pagination mt-4"
+        class="pokemon-catalog__pagination"
       />
     </div>
   </div>
@@ -154,11 +154,11 @@ export default defineComponent({
     ]
     const currentPage = ref(pokemons[0].meta.currentPage)
 
-    const handleSizeChange = (val: number) => {
+    const handleSizeChange = (val: number): void => {
       currentPage.value = val
     }
 
-    const handleChangeCurrentPage = (val: number) => {
+    const handleChangeCurrentPage = (val: number): void => {
       currentPage.value = val
     }
     return {
@@ -173,6 +173,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-catalog {
+  width: 80%;
+
   &__top {
     display: flex;
     justify-content: space-between;
