@@ -46,7 +46,6 @@ export default defineComponent({
     )
 
     const pokemonListValues = ref<PokemonType[]>(pokemonList)
-    pokemonListValues.value = pokemonList
 
     const handleClose = (): void => {
       emit('close')
