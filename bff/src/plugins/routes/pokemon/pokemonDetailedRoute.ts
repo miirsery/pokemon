@@ -155,38 +155,27 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
 
 async function getEvolutionChain(evolvesTo, fastify): Promise<any[]> {
   let evolutionChain: any[] = []
-  const stage1: any[] = []
-  const stage2: any[] = []
-  const stage3: any[] = []
+  const stage1: PokemonEvolutionType[] = []
+  const stage2: PokemonEvolutionType[] = []
+  const stage3: PokemonEvolutionType[] = []
 
   const getAndAddEvolutionPokemon = async (slug: string, stage: number): Promise<void> => {
     const pokemon = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${slug}`)
+    const pokemonToStage: PokemonEvolutionType = {
+      name: pokemon.data.name,
+      id: pokemon.data.id,
+      image: pokemon.data.sprites.other['official-artwork']['front_default'],
+      types:  pokemon.data.types.map(item => item['type']['name']),
+      stage: stage
+    }
     if (stage === 1) {
-      stage1.push({
-        name: pokemon.data.name,
-        id: pokemon.data.id,
-        image: pokemon.data.sprites.other['official-artwork']['front_default'],
-        types:  pokemon.data.types.map(item => item['type']['name']),
-        stage: stage
-      })
+      stage1.push( pokemonToStage )
     }
     if (stage === 2) {
-      stage2.push({
-        name: pokemon.data.name,
-        id: pokemon.data.id,
-        image: pokemon.data.sprites.other['official-artwork']['front_default'],
-        types:  pokemon.data.types.map(item => item['type']['name']),
-        stage: stage
-      })
+      stage2.push( pokemonToStage )
     }
     if (stage === 3) {
-      stage3.push({
-        name: pokemon.data.name,
-        id: pokemon.data.id,
-        image: pokemon.data.sprites.other['official-artwork']['front_default'],
-        types:  pokemon.data.types.map(item => item['type']['name']),
-        stage: stage
-      })
+      stage3.push( pokemonToStage )
     }
     evolutionChain = [{ stage: stage1 }, { stage: stage2 }, { stage: stage3 }]
   }

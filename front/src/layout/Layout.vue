@@ -4,9 +4,9 @@
     <div class="content__wrapper">
       <router-view @update="updateLocalStorage" />
       <pokemon-sidebar
-        @updateValue="updateLocalStorage"
-        @getPokemon="getPokemonList"
-        :isUpdated="isUpdated"
+        @update-value="updateLocalStorage"
+        @get-pokemon="getPokemonList"
+        :is-updated="isUpdated"
       />
     </div>
   </div>

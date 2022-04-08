@@ -35,7 +35,7 @@ export class PokemonDetailedMapper {
 
     const setStats = (stats): StatsType[] => {
       return (stats.map(item => {
-        let maxStat = 200
+        const maxStat = 200
         let currentStat = item['base_stat']
         if (currentStat >= maxStat) {
           currentStat = maxStat
