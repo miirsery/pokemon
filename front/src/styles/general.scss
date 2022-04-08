@@ -3,6 +3,13 @@ html {
   font-size: 16px;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
 body {
   min-height: 100%;
   font-weight: 400;
@@ -23,11 +30,14 @@ button {
   cursor: pointer;
 }
 
-#app {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+[class*='heading-title'] {
+  font-size: clamp(18px, 4vw, 36px);
+  line-height: 1.1;
+}
+
+[class*='subtitle'] {
+  font-size: clamp(14px, 4vw, 24px);
+  line-height: 0.9;
 }
 
 [class*='container'] {
@@ -41,10 +51,16 @@ button {
   flex: 1 0 auto;
 }
 
-[class*='heading-title'] {
-  font-size: clamp(18px, 4vw, 36px);
-  line-height: 1.1;
-}
+.type {
+  &-grass {
+    color: $color-dark-gray;
+    background-color: #9bcc50;
+  }
+
+  &-poison {
+    color: $color-white;
+    background-color: #b97fc9;
+  }
 
 [class*='subtitle'] {
   font-size: clamp(14px, 4vw, 24px);

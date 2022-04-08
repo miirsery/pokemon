@@ -53,6 +53,7 @@ export default defineComponent({
 
   &__wrapper {
     display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

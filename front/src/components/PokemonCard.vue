@@ -20,7 +20,12 @@
           {{ name }}
         </p>
         <div class="pokemon-card__types">
-          <p v-for="type in types">
+          <p
+            class="pokemon-card__type"
+            v-for="type in types"
+            :key="type"
+            :class="`type-${type}`"
+          >
             {{ type }}
           </p>
         </div>
@@ -40,7 +45,9 @@ export default defineComponent({
     types: Array,
   },
   setup(props) {
-    const filteredId = computed(() => props.id.toString().padStart(4, '0'))
+    const filteredId = computed((): string =>
+      props.id.toString().padStart(4, '0')
+    )
     return { filteredId }
   },
 })
@@ -51,22 +58,20 @@ export default defineComponent({
   &__types {
     display: flex;
     align-content: center;
+  }
 
-    p {
-      margin-right: 0.3rem;
-      border-radius: 5px;
-      padding: 4px;
-      width: 33%;
-      font-size: 12px;
-      text-align: center;
-      color: $color-white;
-      background-color: $color-accent;
-      transition: background-color 0.2s ease-out;
-      cursor: pointer;
+  &__type {
+    margin-right: 0.3rem;
+    border-radius: 5px;
+    padding: 4px;
+    width: 33%;
+    font-size: 12px;
+    text-align: center;
+    transition: background-color 0.2s ease-out;
+    cursor: pointer;
 
-      &:hover {
-        background-color: #228eb7;
-      }
+    &:hover {
+      background-color: #228eb7;
     }
   }
 
