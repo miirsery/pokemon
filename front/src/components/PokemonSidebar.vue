@@ -61,7 +61,7 @@ export default defineComponent({
         img: string
       }
     }
-    let pokemonListValues = ref<PokemonType[]>()
+    const pokemonListValues = ref<PokemonType[]>()
 
     const getPokemonList = async (): Promise<void> => {
       pokemonListValues.value = JSON.parse(localStorage.getItem('pokemon-list'))
