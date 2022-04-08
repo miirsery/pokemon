@@ -62,22 +62,6 @@ button {
     background-color: #b97fc9;
   }
 
-[class*='subtitle'] {
-  font-size: clamp(14px, 4vw, 24px);
-  line-height: 0.9;
-}
-
-.type {
-  &-grass {
-    color: $color-dark-gray;
-    background-color: #9bcc50;
-  }
-
-  &-poison {
-    color: $color-white;
-    background-color: #b97fc9;
-  }
-
   &-fire {
     color: $color-white;
     background-color: #fd7d24;
