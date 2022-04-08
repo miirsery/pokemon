@@ -35,11 +35,11 @@ const PokemonSchema = Type.Object({
   image: Type.String(),
   height: Type.Number(),
   weight: Type.Number(),
-  types: Type.Array(PokemonTypesType),
+  types: Type.Array(Type.String()),
   stats: Type.Array(PokemonStatsSchema),
   abilities: Type.Array(PokemonAbilities),
   genders: Type.Array(Type.String()),
-  genera: Type.Array(Type.String()),
+  genera: Type.String(),
   evolution: StageSchema,
 })
 
@@ -146,6 +146,9 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
 
   if (isPokemonGenderless())
     gender.push('genderless')
+
+  if (gender.length === 0)
+    gender.push('XZ-gender')
 
   return gender
 }

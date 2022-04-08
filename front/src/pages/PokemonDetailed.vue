@@ -3,17 +3,22 @@
   <div v-else class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
-        {{ detailedPokemon.data['name'] }}
+        {{ detailedPokemon.name }}
         <span class="pokemon-detailed__id">
-          №{{ filteredId(detailedPokemon.data['id']) }}
+          №{{ filteredId(detailedPokemon.id) }}
         </span>
       </h2>
       <div class="pokemon-main">
         <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
+            <pokemon-empty-image
+              :font-size="26"
+              v-if="detailedPokemon.image === 'no-image'"
+            />
             <img
-              :src="detailedPokemon.data['image']"
-              :alt="detailedPokemon.data['name']"
+              v-else
+              :src="detailedPokemon.image"
+              :alt="detailedPokemon.name"
             />
           </div>
           <div class="pokemon-main__right">
@@ -27,19 +32,19 @@
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Height</h4>
                   <p class="pokemon-info__item-value">
-                    {{ detailedPokemon.data['height'] / 10 }} m
+                    {{ detailedPokemon.height }} m
                   </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Weight</h4>
                   <p class="pokemon-info__item-value">
-                    {{ detailedPokemon.data['weight'] / 10 }} kg
+                    {{ detailedPokemon.weight }} kg
                   </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Gender</h4>
                   <div class="pokemon-info__item-value">
-                    <span v-for="gender in detailedPokemon.data['genders']">
+                    <span v-for="gender in detailedPokemon.genders">
                       <icon-template :name="gender" width="24" height="24" />
                     </span>
                   </div>
@@ -49,14 +54,14 @@
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Category</h4>
                   <p class="pokemon-info__item-value">
-                    {{ detailedPokemon?.data?.genera?.shift() }}
+                    {{ detailedPokemon.genera }}
                   </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Abilities</h4>
                   <p
                     class="pokemon-info__item-value ability"
-                    v-for="ability in detailedPokemon.data['abilities']"
+                    v-for="ability in detailedPokemon.abilities"
                     :key="ability.name"
                     @click="toggleDetailedAbility(ability.name)"
                   >
@@ -70,11 +75,11 @@
               <div class="pokemon-elements__actions">
                 <button
                   class="pokemon-elements__type"
-                  v-for="type in detailedPokemon.data['types']"
+                  v-for="type in detailedPokemon.types"
                   :key="type"
-                  :class="`type-${type.name}`"
+                  :class="`type-${type}`"
                 >
-                  {{ type.name }}
+                  {{ type }}
                 </button>
               </div>
             </div>
@@ -85,7 +90,7 @@
           <ul class="pokemon-stats__menu">
             <li
               class="pokemon-stats__item"
-              v-for="(item, index) in detailedPokemon.data['stats']"
+              v-for="(item, index) in detailedPokemon.stats"
               :key="item.name"
             >
               <ul class="pokemon-stats__gauge">
@@ -110,15 +115,15 @@
           <div class="pokemon-evolution__content">
             <div
               class="pokemon-item__stage"
-              v-for="(pokemonStage, index) in detailedPokemon?.data?.evolution"
+              v-for="(pokemonStage, index) in detailedPokemon?.evolution"
               :key="pokemonStage.stage.name"
               :class="{
                 'pokemon-item__stage-small':
-                  detailedPokemon?.data?.evolution[index].stage.length > 3,
+                  detailedPokemon?.evolution[index].stage.length > 3,
               }"
             >
               <div
-                v-if="detailedPokemon?.data?.evolution[index].stage.length > 3"
+                v-if="detailedPokemon?.evolution[index].stage.length > 3"
                 class="pokemon-item__arrow"
               ></div>
               <div
@@ -132,7 +137,6 @@
                   :class="{
                     'pokemon-item__image-small': pokemonStage.length > 2,
                   }"
-                  @click="getDetailedPokemon(pokemon.id)"
                 >
                   <img :src="pokemon.image" :alt="pokemon.name" />
                 </router-link>
@@ -160,14 +164,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineAsyncComponent,
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-} from 'vue'
+import { defineAsyncComponent, defineComponent, onMounted, ref } from 'vue'
 import { pokemonAPI } from '@/api/pokemon.api'
 import { onBeforeRouteUpdate } from 'vue-router'
 
@@ -187,20 +184,59 @@ export default defineComponent({
     PokemonDetailedPreloader: defineAsyncComponent(
       () => import('@/components/PokemonDetailedPreloader.vue')
     ),
+    PokemonEmptyImage: defineAsyncComponent(
+      () => import('@/components/PokemonEmptyImage.vue')
+    ),
   },
-  setup: function (props, { emit }) {
-    type ToExcludeFieldsType = 'abilities' | 'stats'
+  setup(props, { emit }) {
+    type LocalStoragePokemonType = {
+      id: number
+      image: string
+      name: string
+    }
 
-    let detailedPokemon = reactive({
-      data: {},
-    })
+    type StatsType = {
+      baseStat: number
+      name: string
+    }
 
+    type AbilitiesType = {
+      name: string
+      url: string
+    }
+
+    type EvolutionType = {
+      id: number
+      name: string
+      image: string
+      types: string[]
+      stage: number
+    }
+
+    type DetailedPokemonType = {
+      id: number
+      name: string
+      image: string
+      height: number
+      weight: number
+      types: string[]
+      stats: StatsType[]
+      abilities: AbilitiesType[]
+      genders: string[]
+      genera: string
+      evolution: EvolutionType[]
+    }
+
+    const detailedPokemon = ref<DetailedPokemonType>()
+    const localStoragePokemon = ref<LocalStoragePokemonType>()
     const showDetailedAbility = ref(false)
     const nameOfAbility = ref('')
     const isLoading = ref(true)
+
     const setDetailedAbilityName = (name): void => {
       nameOfAbility.value = name
     }
+
     const toggleDetailedAbility = (name): void => {
       showDetailedAbility.value = !showDetailedAbility.value
       if (name !== undefined) {
@@ -208,23 +244,22 @@ export default defineComponent({
       }
     }
 
-    type LocalStoragePokemonType = {
-      id: number
-      name: string
-      image: string
-    }
-
-    let localStoragePokemon = ref({})
-
-    const oldPokemonList: any[] = JSON.parse(
+    const oldPokemonList: LocalStoragePokemonType[] = JSON.parse(
       localStorage.getItem('pokemon-list')
     )
-    const updateLocalStorage = async () => {
+
+    const clearPage = (): void => {
+      isLoading.value = true
+      detailedPokemon.value = null
+    }
+
+    const updateLocalStorage = async (): Promise<void> => {
       emit('update', true)
     }
-    const setPokemonListInLocalStorage = async () => {
+
+    const setPokemonListInLocalStorage = async (): Promise<void> => {
       if (oldPokemonList) {
-        let newPokemonList = oldPokemonList
+        const newPokemonList = oldPokemonList
         newPokemonList.forEach((pokemon, index) => {
           if (pokemon.id === localStoragePokemon.value['id']) {
             newPokemonList.splice(index, 1)
@@ -235,6 +270,7 @@ export default defineComponent({
         if (newPokemonList.length > 5) {
           newPokemonList.pop()
         }
+
         localStorage.setItem('pokemon-list', JSON.stringify(newPokemonList))
       } else {
         localStorage.setItem(
@@ -244,42 +280,40 @@ export default defineComponent({
       }
     }
 
-    const filteredId = (id) => id.toString().padStart(4, '0')
+    const filteredId = (id): string => id?.toString().padStart(4, '0')
 
-    const clearPage = (): void => {
-      isLoading.value = true
-      detailedPokemon.data = []
-    }
-
-    const getDetailedPokemon = async (id) => {
+    const getDetailedPokemon = async (id): Promise<void> => {
       clearPage()
+
       const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
-      detailedPokemon.data = detailedPokemonData.pokemon
+      detailedPokemon.value = detailedPokemonData.pokemon
+
       localStoragePokemon.value = {
-        id: filteredId(detailedPokemon.data['id']),
-        name: detailedPokemon.data['name'],
-        image: detailedPokemon.data['image'],
+        id: detailedPokemon.value.id,
+        name: detailedPokemon.value.name,
+        image: detailedPokemon.value.image,
       }
+
       isLoading.value = false
       await setPokemonListInLocalStorage()
       await updateLocalStorage()
     }
 
-    onBeforeRouteUpdate(async (to) => {
+    onBeforeRouteUpdate(async (to): Promise<void> => {
       await getDetailedPokemon(to.params.id)
     })
 
-    onMounted(() => {
+    onMounted((): void => {
       getDetailedPokemon(props.id)
     })
     return {
+      showDetailedAbility,
       detailedPokemon,
-      toggleDetailedAbility,
       nameOfAbility,
       isLoading,
-      filteredId,
-      showDetailedAbility,
+      toggleDetailedAbility,
       getDetailedPokemon,
+      filteredId,
     }
   },
 })
@@ -405,6 +439,7 @@ export default defineComponent({
   }
 
   &__img {
+    position: relative;
     margin-right: clamp(1rem, 4vw, 3rem);
     border-radius: 10px;
     width: 60%;

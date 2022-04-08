@@ -13,15 +13,21 @@
         <router-link
           class="pokemon-sidebar__item"
           v-for="pokemon in pokemonListValues"
-          :key="pokemon.name"
+          :key="pokemon['name']"
           :to="{ name: 'PokemonDetailed', params: { id: pokemon.id } }"
         >
           <div class="pokemon-sidebar__item-img">
-            <img :src="pokemon.image" :alt="pokemon.name" />
+            <pokemon-empty-image
+              :font-size="14"
+              v-if="pokemon['image'] === 'no-image'"
+            />
+            <img v-else :src="pokemon['image']" :alt="pokemon['name']" />
           </div>
           <div class="pokemon__info">
-            <p class="pokemon__info-id subtitle">№{{ pokemon.id }}</p>
-            <p class="pokemon__info-title subtitle">{{ pokemon.name }}</p>
+            <p class="pokemon__info-id subtitle">
+              №{{ pokemon['id'].toString().padStart(4, '0') }}
+            </p>
+            <p class="pokemon__info-title subtitle">{{ pokemon['name'] }}</p>
           </div>
         </router-link>
       </ul>
@@ -29,13 +35,24 @@
   </aside>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from 'vue'
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  watch,
+  defineAsyncComponent,
+} from 'vue'
 
 export default defineComponent({
   props: {
     isUpdated: Boolean,
   },
   emits: ['updateValue', 'getPokemon'],
+  components: {
+    PokemonEmptyImage: defineAsyncComponent(
+      () => import('@/components/PokemonEmptyImage.vue')
+    ),
+  },
   setup(props, { emit }) {
     type PokemonType = {
       pokemon: {
@@ -44,18 +61,16 @@ export default defineComponent({
         img: string
       }
     }
-    let pokemonList: any = {}
     let pokemonListValues = ref<PokemonType[]>()
 
-    const getPokemonList = async () => {
-      pokemonList = JSON.parse(localStorage.getItem('pokemon-list'))
-      pokemonListValues.value = pokemonList
+    const getPokemonList = async (): Promise<void> => {
+      pokemonListValues.value = JSON.parse(localStorage.getItem('pokemon-list'))
       await emit('updateValue', false)
     }
 
     watch(
-      () => props.isUpdated,
-      (val, _) => {
+      (): boolean => props.isUpdated,
+      (val, _): void => {
         if (val) {
           getPokemonList()
         }
@@ -64,20 +79,12 @@ export default defineComponent({
 
     getPokemonList()
 
-    if (pokemonList) {
-      pokemonListValues.value = pokemonList
-    }
-
     const handleClearPokemonList = (): void => {
       localStorage.removeItem('pokemon-list')
       pokemonListValues.value = []
     }
-    onMounted(() => {
-      emit('updateValue', false)
-    })
     return {
       pokemonListValues,
-      pokemonList,
       getPokemonList,
       handleClearPokemonList,
     }
@@ -140,8 +147,11 @@ export default defineComponent({
     color: $color-dark-gray;
 
     &-img {
+      position: relative;
       margin-right: 2rem;
+      margin-bottom: 0.5rem;
       width: 140px;
+      height: 140px;
 
       img {
         width: 100%;
