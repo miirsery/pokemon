@@ -33,7 +33,7 @@ export class PokemonDetailedMapper {
       ).filter(item => item.length > 0))
     }
 
-    const setStats = (stats) => {
+    const setStats = (stats): StatsType[] => {
       return (stats.map(item => {
         let maxStat = 200
         let currentStat = item['base_stat']
