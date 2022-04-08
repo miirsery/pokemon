@@ -21,26 +21,32 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import { pokemonAPI } from '@/api/pokemon.api'
+
 export default defineComponent({
   name: 'PokemonDetailedAbility',
   emits: ['close'],
   props: {
     name: String,
   },
+
   setup(props, { emit }) {
     const handleCloseDetailedAbility = (): void => {
       emit('close')
     }
+
     const description = ref('')
-    const getDescriptionOfAbility = async () => {
+
+    const getDescriptionOfAbility = async (): Promise<void> => {
       const [_, descriptionData] = await pokemonAPI.getDescriptionOfAbility(
         props.name
       )
       description.value = descriptionData.description
     }
-    onMounted(() => {
+
+    onMounted((): void => {
       getDescriptionOfAbility()
     })
+
     return {
       handleCloseDetailedAbility,
       description,

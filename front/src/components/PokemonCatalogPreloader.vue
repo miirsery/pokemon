@@ -1,38 +1,42 @@
 <template>
-  <el-skeleton class="pokemon-catalog-preloader__skeleton">
-    <template #template>
-      <div
-        class="pokemon-catalog-preloader__skeleton-wrapper"
-        v-for="item in 10"
-        :key="item"
-      >
-        <el-skeleton-item
-          class="pokemon-catalog-preloader__image"
-          variant="image"
-        />
-        <el-skeleton-item class="pokemon-catalog-preloader__id" variant="p" />
-        <div>
+  <div class="pokemon-catalog-preloader">
+    <el-skeleton class="pokemon-catalog-preloader__skeleton">
+      <template #template>
+        <div
+          class="pokemon-catalog-preloader__skeleton-wrapper"
+          v-for="item in 10"
+          :key="item"
+        >
           <el-skeleton-item
-            class="pokemon-catalog-preloader__name"
-            variant="p"
+            class="pokemon-catalog-preloader__image"
+            variant="image"
           />
-          <div class="pokemon-catalog-preloader__text">
+          <el-skeleton-item class="pokemon-catalog-preloader__id" variant="p" />
+          <div>
             <el-skeleton-item
-              class="pokemon-catalog-preloader__text-item"
-              variant="text"
+              class="pokemon-catalog-preloader__name"
+              variant="p"
             />
-            <el-skeleton-item
-              class="pokemon-catalog-preloader__text-item"
-              variant="text"
-            />
+            <div class="pokemon-catalog-preloader__text">
+              <el-skeleton-item
+                class="pokemon-catalog-preloader__text-item"
+                variant="text"
+              />
+              <el-skeleton-item
+                class="pokemon-catalog-preloader__text-item"
+                variant="text"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </template>
-  </el-skeleton>
+      </template>
+    </el-skeleton>
+  </div>
 </template>
 <style lang="scss" scoped>
 .pokemon-catalog-preloader {
+  height: 140vh;
+
   &__skeleton {
     position: absolute;
     left: 7%;
@@ -49,8 +53,8 @@
 
   &__image {
     margin-bottom: 0.5rem;
-    width: 240px;
-    height: 240px;
+    width: 200px;
+    height: 200px;
   }
 
   &__id {

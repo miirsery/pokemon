@@ -14,6 +14,7 @@ export default defineComponent({
       default: 18,
     },
   },
+
   setup(props) {
     const data = reactive({
       fontSize: computed(() => `${props.fontSize}px`),

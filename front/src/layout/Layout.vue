@@ -30,7 +30,7 @@ export default defineComponent({
     const isUpdated = ref(false)
     const isGetPokemon = ref(false)
 
-    const updateLocalStorage = (value) => {
+    const updateLocalStorage = (value): void => {
       isUpdated.value = value
     }
 

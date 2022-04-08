@@ -47,6 +47,7 @@ export default defineComponent({
       () => import('@/components/PokemonEmptyImage.vue')
     ),
   },
+
   setup(props, { emit }) {
     type PokemonType = {
       pokemon: {

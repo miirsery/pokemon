@@ -91,6 +91,7 @@ export default defineComponent({
         behavior: 'smooth',
       })
     }
+
     const handleChangeCurrentPage = (val: number): void => {
       offset = limit * val - limit
       currentPage.value = val

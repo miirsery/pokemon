@@ -188,6 +188,7 @@ export default defineComponent({
       () => import('@/components/PokemonEmptyImage.vue')
     ),
   },
+
   setup(props, { emit }) {
     type LocalStoragePokemonType = {
       id: number
@@ -306,6 +307,7 @@ export default defineComponent({
     onMounted((): void => {
       getDetailedPokemon(props.id)
     })
+
     return {
       showDetailedAbility,
       detailedPokemon,
