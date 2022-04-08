@@ -105,7 +105,7 @@
                 ></li>
               </ul>
               <span class="pokemon-stats__item-name">
-                {{ item.name.replace('-', ' ') }}
+                {{ item.name }}
               </span>
             </li>
           </ul>

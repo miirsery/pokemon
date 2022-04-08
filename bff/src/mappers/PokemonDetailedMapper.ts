@@ -41,7 +41,8 @@ export class PokemonDetailedMapper {
           currentStat = maxStat
         }
         return {
-          baseStat: currentStat, name: item['stat']['name']
+          baseStat: currentStat,
+          name: item['stat']['name'].replace('-', ' ')
         }
       }
       ))
