@@ -85,6 +85,7 @@ export default defineComponent({
       totalPages.value = pokemonListData.meta.totalPages
       isLoading.value = false
     }
+
     const scrollToTop = (): void => {
       window.scrollTo({
         top: 0,
