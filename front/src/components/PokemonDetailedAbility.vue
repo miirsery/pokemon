@@ -62,7 +62,7 @@ export default defineComponent({
   border-radius: 10px;
   padding: 15px;
   width: 60%;
-  height: 171px;
+  min-height: 171px;
   background-color: $color-before-dark-gray;
 
   &__top {

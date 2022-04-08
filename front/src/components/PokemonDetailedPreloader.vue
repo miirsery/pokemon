@@ -135,12 +135,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 2rem auto;
+    margin: 3rem auto;
     width: 50%;
 
     &-circle {
-      width: 160px;
-      height: 160px;
+      margin-right: 2rem;
+      width: 140px;
+      height: 140px;
     }
   }
 }
