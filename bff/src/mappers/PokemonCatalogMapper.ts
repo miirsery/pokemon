@@ -3,7 +3,7 @@ import {
   PaginationSchemaType
 } from '~/plugins/routes/pokemon/pokemonCatalogRoute'
 
-type AbilityType = {
+type PokemonTypesType = {
   ability: {
     name: string
   }
@@ -16,23 +16,22 @@ export class PokemonCatalogMapper {
     offset: number
   ): PaginationSchemaType => {
     const totalPages = Math.ceil(count / limit)
-    const currentPage = Math.ceil(offset / limit )
 
-    return { totalPages, currentPage }
+    return { totalPages }
   }
   static mapDetailedCatalogToFrontend = (
     url: string,
     image: string,
     id: number,
     name: string,
-    abilities: AbilityType[]
+    types: PokemonTypesType[]
   ): DetailedPokemonSchemaType => {
     return {
       image: image,
       urL: url,
       id: id,
       name: name,
-      abilities: abilities.map((item) => item.ability.name)
+      types: types.map((item) => item['type'].name)
     }
   }
 }

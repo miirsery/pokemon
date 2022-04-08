@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import PokemonHeader from '@/components/PokemonHeader.vue'
 import PokemonFooter from '@/components/PokemonFooter.vue'
 import PokemonSidebar from '@/components/PokemonSidebar.vue'
@@ -22,33 +22,17 @@ export default defineComponent({
     PokemonFooter,
     PokemonSidebar,
   },
-  setup() {
-    const showSidebar = ref(true)
-    const handleToggleSidebar = (): void => {
-      showSidebar.value = !showSidebar.value
-    }
-    return {
-      handleToggleSidebar,
-      showSidebar,
-    }
-  },
 })
 </script>
 
 <style lang="scss" scoped>
 .content {
   position: relative;
+  min-height: 160vh;
 
   &__wrapper {
     display: flex;
+    justify-content: flex-end;
   }
-}
-
-.toggle-sidebar-icon {
-  position: fixed;
-  right: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
 }
 </style>

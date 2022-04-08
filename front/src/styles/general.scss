@@ -11,10 +11,10 @@ html {
 }
 
 body {
-  height: 100%;
+  min-height: 100%;
   font-weight: 400;
   color: #000;
-  background: center/ cover no-repeat url('../assets/images/bg.png');
+  background: center/ cover url('../assets/images/bg.png');
 }
 
 a {
@@ -30,6 +30,16 @@ button {
   cursor: pointer;
 }
 
+[class*='heading-title'] {
+  font-size: clamp(18px, 4vw, 36px);
+  line-height: 1.1;
+}
+
+[class*='subtitle'] {
+  font-size: clamp(14px, 4vw, 24px);
+  line-height: 0.9;
+}
+
 [class*='container'] {
   margin: 0 auto;
   padding: 0 15px;
@@ -41,12 +51,94 @@ button {
   flex: 1 0 auto;
 }
 
-[class*='heading-title'] {
-  font-size: clamp(18px, 4vw, 36px);
-  line-height: 1.1;
-}
+.type {
+  &-grass {
+    color: $color-dark-gray;
+    background-color: #9bcc50;
+  }
 
-[class*='subtitle'] {
-  font-size: clamp(14px, 4vw, 24px);
-  line-height: 0.9;
+  &-poison {
+    color: $color-white;
+    background-color: #b97fc9;
+  }
+
+  &-fire {
+    color: $color-white;
+    background-color: #fd7d24;
+  }
+
+  &-flying {
+    color: $color-dark-gray;
+    background: linear-gradient(180deg, #3dc7ef 50%, #bdb9b8 50%);
+  }
+
+  &-water {
+    color: $color-white;
+    background-color: #4592c4;
+  }
+
+  &-bug {
+    color: $color-white;
+    background-color: #729f3f;
+  }
+
+  &-normal {
+    color: $color-dark-gray;
+    background-color: #a4acaf;
+  }
+
+  &-dragon {
+    color: $color-white;
+    background: linear-gradient(180deg, #53a4cf 50%, #f16e57 50%);
+  }
+
+  &-fairy {
+    color: $color-dark-gray;
+    background-color: #fdb9e9;
+  }
+
+  &-ghost {
+    color: $color-white;
+    background-color: #7b62a3;
+  }
+
+  &-ground {
+    color: $color-white;
+    background: linear-gradient(180deg, #f7de3f 50%, #ab9842 50%);
+  }
+
+  &-psychic {
+    color: $color-white;
+    background-color: #f366b9;
+  }
+
+  &-steel {
+    color: $color-dark-gray;
+    background-color: #212121;
+  }
+
+  &-dark {
+    color: $color-white;
+    background-color: #707070;
+  }
+
+  &-electric {
+    color: $color-dark-gray;
+    background-color: #eed535;
+  }
+
+  &-fighting {
+    color: $color-white;
+    background-color: #d56723;
+  }
+
+  &-ice {
+    color: $color-dark-gray;
+    background-color: #51c4e7;
+  }
+
+  &-rock {
+    color: $color-white;
+    background-color: #a38c21;
+  }
 }
