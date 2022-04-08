@@ -35,13 +35,7 @@
   </aside>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  watch,
-  defineAsyncComponent,
-} from 'vue'
+import { defineComponent, ref, watch, defineAsyncComponent } from 'vue'
 
 export default defineComponent({
   props: {
