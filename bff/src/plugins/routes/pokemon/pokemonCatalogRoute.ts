@@ -6,7 +6,6 @@ import {
 
 const PaginationSchema = Type.Object({
   totalPages: Type.Number(),
-  currentPage: Type.Number(),
 })
 
 const QueryParameterSchema = Type.Object({
@@ -19,7 +18,7 @@ const DetailedPokemonSchema = Type.Object({
   urL: Type.String(),
   id: Type.Number(),
   name: Type.String(),
-  abilities: Type.Array(Type.String())
+  types: Type.Array(Type.String())
 })
 
 const ResponseSchema = Type.Object({
@@ -34,8 +33,6 @@ export type QueryParameterSchemaType = Static<typeof QueryParameterSchema>
 export type DetailedPokemonSchemaType = Static<typeof DetailedPokemonSchema>
 
 type ResponseSchemaType = Static<typeof ResponseSchema>
-
-
 
 const pokemonCatalogRoute = (fastify: FastifyInstance) => {
   return fastify.get<{
@@ -66,7 +63,7 @@ const pokemonCatalogRoute = (fastify: FastifyInstance) => {
             data.sprites.other['official-artwork'].front_default,
             data.id,
             data.name,
-            data.abilities
+            data.types
           ))
         }
 

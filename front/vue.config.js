@@ -3,6 +3,13 @@ const SpriteLoaderPlugin = require('svg-sprite-loader/plugin')
 const path = require('path')
 
 module.exports = {
+  devServer: {
+    proxy: {
+      '/api': {
+        target: process.env.VUE_APP_BASE_URI,
+      },
+    },
+  },
   configureWebpack: {
     module: {
       rules: [

@@ -1,5 +1,6 @@
 <template>
-  <div class="pokemon-catalog">
+  <pokemon-catalog-preloader v-if="isLoading" />
+  <div v-else class="pokemon-catalog">
     <div class="pokemon-catalog__container pokemon-catalog__wrapper">
       <div class="pokemon-catalog__top">
         <h2 class="pokemon-catalog__title heading-title">Каталог покемонов</h2>
@@ -8,7 +9,7 @@
         <div class="pokemon-catalog__items">
           <div
             class="pokemon-catalog__item"
-            v-for="pokemon in pokemons[0].pokemonList"
+            v-for="pokemon in pokemonList.values"
             :key="pokemon.name"
           >
             <pokemon-card
@@ -26,8 +27,7 @@
         small
         background
         layout="prev, pager, next"
-        :total="pokemons[0].meta.totalPages * 10"
-        @sise-change="handleSizeChange"
+        :total="totalPages * limit"
         @current-change="handleChangeCurrentPage"
         class="pokemon-catalog__pagination"
       />
@@ -36,136 +36,82 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  reactive,
+  defineAsyncComponent,
+} from 'vue'
 import PokemonCard from '@/components/PokemonCard.vue'
+import { pokemonAPI } from '@/api/pokemon.api'
 
 export default defineComponent({
   name: 'PokemonCatalog',
   components: {
     PokemonCard,
+    PokemonCatalogPreloader: defineAsyncComponent(
+      () => import('@/components/PokemonCatalogPreloader.vue')
+    ),
   },
   setup() {
-    type MetaType = {
-      totalPages: number
-      currentPage: number
-    }
-    type PokemonList = {
-      id: number
-      name: string
-      image: string
-      url: string
-      types: string[]
-    }
-
-    type Pokemon = {
-      meta: MetaType
-      pokemonList: PokemonList[]
+    type PokemonListType = {
+      values: [
+        {
+          abilities: string[]
+          id: number
+          image: string
+          name: string
+          url: string
+        }
+      ]
     }
 
-    const pokemons: Pokemon[] = [
-      {
-        meta: {
-          totalPages: 113,
-          currentPage: 3,
-        },
-        pokemonList: [
-          {
-            id: 31,
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/31.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/31/',
-            name: 'nidoqueen',
-            types: ['poison-point', 'rivalry', 'sheer-force'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/32.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/32/',
-            id: 32,
-            name: 'nidoran-m',
-            types: ['poison-point', 'rivalry', 'hustle'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/33.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/33/',
-            id: 33,
-            name: 'nidorino',
-            types: ['poison-point', 'rivalry', 'hustle'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/34.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/34/',
-            id: 34,
-            name: 'nidoking',
-            types: ['poison-point', 'rivalry', 'sheer-force'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/35.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/35/',
-            id: 35,
-            name: 'clefairy',
-            types: ['cute-charm', 'magic-guard', 'friend-guard'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/36.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/36/',
-            id: 36,
-            name: 'clefable',
-            types: ['cute-charm', 'magic-guard', 'unaware'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/37.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/37/',
-            id: 37,
-            name: 'vulpix',
-            types: ['flash-fire', 'drought'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/38.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/38/',
-            id: 38,
-            name: 'ninetales',
-            types: ['flash-fire', 'drought'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/39/',
-            id: 39,
-            name: 'jigglypuff',
-            types: ['cute-charm', 'competitive', 'friend-guard'],
-          },
-          {
-            image:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
-            url: 'https://pokeapi.co/api/v2/pokemon/40/',
-            id: 40,
-            name: 'wigglytuff',
-            types: ['cute-charm', 'competitive', 'frisk'],
-          },
-        ],
-      },
-    ]
-    const currentPage = ref(pokemons[0].meta.currentPage)
+    const currentPage = ref<Number>()
+    const totalPages = ref<Number>()
+    const isLoading = ref(true)
 
-    const handleSizeChange = (val: number): void => {
-      currentPage.value = val
+    const limit = 10
+    let offset = 0
+
+    const pokemonList = reactive<{ values: PokemonListType[] }>({
+      values: [],
+    })
+
+    const getPokemonList = async (): Promise<void> => {
+      const [, pokemonListData] = await pokemonAPI.getPokemonList(offset, limit)
+
+      pokemonList.values = pokemonListData.pokemonList
+      totalPages.value = pokemonListData.meta.totalPages
+      isLoading.value = false
     }
-
+    const scrollToTop = (): void => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
     const handleChangeCurrentPage = (val: number): void => {
+      offset = limit * val - limit
       currentPage.value = val
+      pokemonList.values = []
+      isLoading.value = true
+
+      getPokemonList()
+      scrollToTop()
     }
+
+    onMounted(() => {
+      getPokemonList()
+    })
+
     return {
-      pokemons,
       currentPage,
+      totalPages,
+      isLoading,
+      limit,
+      pokemonList,
       handleChangeCurrentPage,
-      handleSizeChange,
     }
   },
 })
@@ -173,7 +119,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .pokemon-catalog {
-  width: 80%;
+  width: 1300px;
+  min-height: 100vh;
 
   &__top {
     display: flex;
@@ -193,11 +140,12 @@ export default defineComponent({
   }
 
   &__content {
-    background-color: $color-background;
+    min-height: 100vh;
   }
 
   &__pagination {
-    margin-bottom: 2rem;
+    margin: 2rem auto;
+    max-width: 25%;
   }
 }
 </style>
