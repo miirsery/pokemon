@@ -2,7 +2,7 @@ import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
 import {
   PokemonCatalogMapper
-} from '../../../mappers/PokemonCatalogMapper'
+} from '~/mappers/PokemonCatalogMapper'
 
 const PaginationSchema = Type.Object({
   totalPages: Type.Number(),

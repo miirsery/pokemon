@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
-import { PokemonDetailedAbilityMapper } from '../../../mappers/PokemonDetailedAbilityMapper'
+import { PokemonDetailedAbilityMapper } from '~/mappers/PokemonDetailedAbilityMapper'
 
 const DescriptionSchema = Type.String()
 

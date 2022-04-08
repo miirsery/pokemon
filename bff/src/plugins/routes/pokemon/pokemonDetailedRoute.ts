@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
-import { PokemonDetailedMapper } from '../../../mappers/PokemonDetailedMapper'
+import { PokemonDetailedMapper } from '~/mappers/PokemonDetailedMapper'
 
 const PokemonStatsSchema = Type.Object({
   baseStat: Type.Optional(Type.Number()),
