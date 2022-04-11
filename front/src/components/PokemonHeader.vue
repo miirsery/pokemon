@@ -45,10 +45,6 @@
   </header>
 </template>
 
-<script>
-export default {}
-</script>
-
 <style scoped lang="scss">
 .pokemon-header {
   &__wrapper {

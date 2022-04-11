@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifyInstance } from 'fastify/types/instance'
-import { PokemonDetailedMapper } from '../../../mappers/PokemonDetailedMapper'
+import { PokemonDetailedMapper } from '~/mappers/PokemonDetailedMapper'
 
 const PokemonStatsSchema = Type.Object({
   baseStat: Type.Optional(Type.Number()),
@@ -24,9 +24,10 @@ const PokemonEvolutionSchema = Type.Object({
   stage: Type.Number()
 })
 
-const PokemonGeneraSchema = Type.Object({
-  genus: Type.String(),
-})
+const StageSchema = Type.Optional(Object({
+  stage: PokemonEvolutionSchema
+}))
+
 
 const PokemonSchema = Type.Object({
   id: Type.Number(),
@@ -34,12 +35,12 @@ const PokemonSchema = Type.Object({
   image: Type.String(),
   height: Type.Number(),
   weight: Type.Number(),
-  types: Type.Array(PokemonTypesType),
+  types: Type.Array(Type.String()),
   stats: Type.Array(PokemonStatsSchema),
   abilities: Type.Array(PokemonAbilities),
   genders: Type.Array(Type.String()),
-  genera: Type.Array(PokemonGeneraSchema),
-  evolution: Type.Array(PokemonEvolutionSchema),
+  genera: Type.String(),
+  evolution: StageSchema,
 })
 
 const ResponseSchema = Type.Object({
@@ -146,23 +147,38 @@ const getPokemonGender = async (name: string, fastify): Promise<string[]> => {
   if (isPokemonGenderless())
     gender.push('genderless')
 
+  if (gender.length === 0)
+    gender.push('XZ-gender')
+
   return gender
 }
 
-async function getEvolutionChain(evolvesTo, fastify): Promise<PokemonEvolutionType[]> {
-  const evolutionChain: PokemonEvolutionType[] = []
+async function getEvolutionChain(evolvesTo, fastify): Promise<any[]> {
+  let evolutionChain: any[] = []
+  const stage1: PokemonEvolutionType[] = []
+  const stage2: PokemonEvolutionType[] = []
+  const stage3: PokemonEvolutionType[] = []
 
   const getAndAddEvolutionPokemon = async (slug: string, stage: number): Promise<void> => {
     const pokemon = await fastify.axios.get(`https://pokeapi.co/api/v2/pokemon/${slug}`)
-    evolutionChain.push({
+    const pokemonToStage: PokemonEvolutionType = {
       name: pokemon.data.name,
       id: pokemon.data.id,
       image: pokemon.data.sprites.other['official-artwork']['front_default'],
       types:  pokemon.data.types.map(item => item['type']['name']),
       stage: stage
-    })
+    }
+    if (stage === 1) {
+      stage1.push( pokemonToStage )
+    }
+    if (stage === 2) {
+      stage2.push( pokemonToStage )
+    }
+    if (stage === 3) {
+      stage3.push( pokemonToStage )
+    }
+    evolutionChain = [{ stage: stage1 }, { stage: stage2 }, { stage: stage3 }]
   }
-
   await getAndAddEvolutionPokemon(evolvesTo.species.name, 1)
 
   for (const prop of evolvesTo['evolves_to']) {
@@ -171,7 +187,6 @@ async function getEvolutionChain(evolvesTo, fastify): Promise<PokemonEvolutionTy
       await getAndAddEvolutionPokemon(deepProp.species.name, 3)
     }
   }
-
   return evolutionChain
 }
 

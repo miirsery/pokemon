@@ -1,42 +1,51 @@
 <template>
-  <div class="pokemon-detailed">
+  <pokemon-detailed-preloader v-if="isLoading" />
+  <div v-else class="pokemon-detailed">
     <div class="pokemon-detailed__container pokemon-detailed__wrapper">
       <h2 class="pokemon-detailed__title subtitle">
-        wigglytuff
-        <span class="pokemon-detailed__id">№{{ filteredId }}</span>
+        {{ detailedPokemon.name }}
+        <span class="pokemon-detailed__id">
+          №{{ filteredId(detailedPokemon.id) }}
+        </span>
       </h2>
       <div class="pokemon-main">
         <div class="pokemon-main__wrapper">
           <div class="pokemon-main__img">
-            <img :src="pokemonDetailed.img" :alt="name" />
+            <pokemon-empty-image
+              :font-size="26"
+              v-if="detailedPokemon.image === 'no-image'"
+            />
+            <img
+              v-else
+              :src="detailedPokemon.image"
+              :alt="detailedPokemon.name"
+            />
           </div>
           <div class="pokemon-main__right">
-            <div class="pokemon-info">
+            <pokemon-detailed-ability
+              @close="toggleDetailedAbility"
+              v-if="showDetailedAbility"
+              :name="nameOfAbility"
+            />
+            <div class="pokemon-info" v-else>
               <div class="pokemon-info__item-left">
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Height</h4>
-                  <p class="pokemon-info__item-value">0.5m</p>
+                  <p class="pokemon-info__item-value">
+                    {{ detailedPokemon.height }} m
+                  </p>
                 </div>
                 <div class="pokemon-info__item">
-                  <h4 class="pokemon-info__item-title">Height</h4>
-                  <p class="pokemon-info__item-value">0.5m</p>
+                  <h4 class="pokemon-info__item-title">Weight</h4>
+                  <p class="pokemon-info__item-value">
+                    {{ detailedPokemon.weight }} kg
+                  </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Gender</h4>
                   <div class="pokemon-info__item-value">
-                    <span>
-                      <icon-template
-                        width="24"
-                        height="24"
-                        name="male-gender"
-                      />
-                    </span>
-                    <span>
-                      <icon-template
-                        width="24"
-                        height="24"
-                        name="female-gender"
-                      />
+                    <span v-for="gender in detailedPokemon.genders">
+                      <icon-template :name="gender" width="24" height="24" />
                     </span>
                   </div>
                 </div>
@@ -44,29 +53,34 @@
               <div class="pokemon-info__item-right">
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Category</h4>
-                  <p class="pokemon-info__item-value">Baloon</p>
-                </div>
-                <div class="pokemon-detailed__info-item">
-                  <h4 class="pokemon-info__item-title">Height</h4>
-                  <p class="pokemon-info__item-value">0.5m</p>
+                  <p class="pokemon-info__item-value">
+                    {{ detailedPokemon.genera }}
+                  </p>
                 </div>
                 <div class="pokemon-info__item">
                   <h4 class="pokemon-info__item-title">Abilities</h4>
-                  <p class="pokemon-info__item-value ability">Cute Charm</p>
-                  <p class="pokemon-info__item-value ability">Competitive</p>
+                  <p
+                    class="pokemon-info__item-value ability"
+                    v-for="ability in detailedPokemon.abilities"
+                    :key="ability.name"
+                    @click="toggleDetailedAbility(ability.name)"
+                  >
+                    {{ ability.name.replace('-', ' ') }}
+                  </p>
                 </div>
               </div>
             </div>
             <div class="pokemon-elements">
               <p class="pokemon-elements__title subtitle">Type</p>
               <div class="pokemon-elements__actions">
-                <button class="pokemon-elements__type">Normal</button>
-                <button class="pokemon-elements__type">Fairy</button>
-              </div>
-              <p class="pokemon-elements__title subtitle">Weakness</p>
-              <div class="pokemon-elements__actions">
-                <button class="pokemon-elements__type">Steel</button>
-                <button class="pokemon-elements__type">Poison</button>
+                <button
+                  class="pokemon-elements__type"
+                  v-for="type in detailedPokemon.types"
+                  :key="type"
+                  :class="`type-${type}`"
+                >
+                  {{ type }}
+                </button>
               </div>
             </div>
           </div>
@@ -76,84 +90,69 @@
           <ul class="pokemon-stats__menu">
             <li
               class="pokemon-stats__item"
-              v-for="(item, index) in 6"
-              :key="index"
+              v-for="(item, index) in detailedPokemon.stats"
+              :key="item.name"
             >
               <ul class="pokemon-stats__gauge">
-                <li class="pokemon-stats__gauge-meter"></li>
+                <li
+                  :style="{ top: `${100 - item.baseStat / 2}%` }"
+                  class="pokemon-stats__gauge-meter"
+                />
                 <li
                   class="pokemon-stats__gauge-item"
                   v-for="(pokemonItem, pokemonIndex) in 15"
                   :key="pokemonIndex"
-                ></li>
+                />
               </ul>
-              <span>HP</span>
+              <span class="pokemon-stats__item-name">
+                {{ item.name }}
+              </span>
             </li>
           </ul>
         </div>
         <div class="pokemon-evolution">
           <h2 class="pokemon-evolution__title subtitle">Стадии эволюции</h2>
-          <div class="pokemon-evolution__items">
-            <div class="pokemon-evolution__item">
-              <router-link to="#">
-                <div class="pokemon-evolution__item-img">
-                  <img :src="pokemonDetailed.img" alt="pokemon" />
-                </div>
-                <h3 class="pokemon-evolution__item-title">
-                  Wigglytuff
-                  <span class="pokemon-evolution__item-id">
-                    №{{ filteredId }}
-                  </span>
+          <div class="pokemon-evolution__content">
+            <div
+              class="pokemon-item__stage"
+              v-for="(pokemonStage, index) in detailedPokemon?.evolution"
+              :key="pokemonStage.stage.name"
+              :class="{
+                'pokemon-item__stage-small':
+                  detailedPokemon?.evolution[index].stage.length > 3,
+              }"
+            >
+              <div
+                v-if="detailedPokemon?.evolution[index].stage.length > 3"
+                class="pokemon-item__arrow"
+              />
+              <div
+                class="pokemon-item__wrapper"
+                v-for="pokemon in pokemonStage.stage"
+                :key="pokemon.name"
+              >
+                <router-link
+                  :to="`/pokemon/${pokemon.id}`"
+                  class="pokemon-item__image"
+                  :class="{
+                    'pokemon-item__image-small': pokemonStage.length > 2,
+                  }"
+                >
+                  <img :src="pokemon.image" :alt="pokemon.name" />
+                </router-link>
+                <h3 class="pokemon-item__name">
+                  {{ pokemon?.name.replace('-', ' ') }}
                 </h3>
-              </router-link>
-              <div class="pokemon-evolution__item-types">
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Grass</router-link>
-                </div>
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Poison</router-link>
-                </div>
-              </div>
-            </div>
-            <div class="pokemon-evolution__item">
-              <router-link to="#">
-                <div class="pokemon-evolution__item-img">
-                  <img :src="pokemonDetailed.img" alt="pokemon" />
-                </div>
-                <h3 class="pokemon-evolution__item-title">
-                  Wigglytuff
-                  <span class="pokemon-evolution__item-id">
-                    №{{ filteredId }}
-                  </span>
-                </h3>
-              </router-link>
-              <div class="pokemon-evolution__item-types">
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Grass</router-link>
-                </div>
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Poison</router-link>
-                </div>
-              </div>
-            </div>
-            <div class="pokemon-evolution__item">
-              <router-link to="#">
-                <div class="pokemon-evolution__item-img">
-                  <img :src="pokemonDetailed.img" alt="pokemon" />
-                </div>
-                <h3 class="pokemon-evolution__item-title">
-                  Wigglytuff
-                  <span class="pokemon-evolution__item-id">
-                    №{{ filteredId }}
-                  </span>
-                </h3>
-              </router-link>
-              <div class="pokemon-evolution__item-types">
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Grass</router-link>
-                </div>
-                <div class="pokemon-evolution__item-type">
-                  <router-link to="#">Poison</router-link>
+                <p class="pokemon-item__id">№{{ filteredId(pokemon.id) }}</p>
+                <div class="pokemon-item__types">
+                  <p
+                    class="pokemon-item__type"
+                    v-for="type in pokemon.types"
+                    :key="type"
+                    :class="`type-${type}`"
+                  >
+                    {{ type }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -165,80 +164,158 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import { defineAsyncComponent, defineComponent, onMounted, ref } from 'vue'
+import { pokemonAPI } from '@/api/pokemon.api'
+import { onBeforeRouteUpdate } from 'vue-router'
 
 export default defineComponent({
   name: 'PokemonDetailed',
+  emits: ['update'],
   props: {
     id: {
       type: String,
       required: true,
     },
   },
-  setup() {
-    type DetailedPokemonStatsType = {
-      stat: number
+  components: {
+    PokemonDetailedAbility: defineAsyncComponent(
+      () => import('@/components/PokemonDetailedAbility.vue')
+    ),
+    PokemonDetailedPreloader: defineAsyncComponent(
+      () => import('@/components/PokemonDetailedPreloader.vue')
+    ),
+    PokemonEmptyImage: defineAsyncComponent(
+      () => import('@/components/PokemonEmptyImage.vue')
+    ),
+  },
+
+  setup(props, { emit }) {
+    type LocalStoragePokemonType = {
+      id: number
+      image: string
       name: string
+    }
+
+    type StatsType = {
+      baseStat: number
+      name: string
+    }
+
+    type AbilitiesType = {
+      name: string
+      url: string
+    }
+
+    type EvolutionType = {
+      id: number
+      name: string
+      image: string
+      types: string[]
+      stage: number
     }
 
     type DetailedPokemonType = {
       id: number
       name: string
-      img: string
-      abilities: string[]
-      stats: DetailedPokemonStatsType[]
+      image: string
+      height: number
+      weight: number
+      types: string[]
+      stats: StatsType[]
+      abilities: AbilitiesType[]
+      genders: string[]
+      genera: string
+      evolution: EvolutionType[]
     }
 
-    const pokemonDetailed: DetailedPokemonType = {
-      id: 56,
-      name: 'Pokemon4ik',
-      img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/40.png',
-      abilities: ['fire', 'storm'],
-      stats: [
-        {
-          stat: 48,
-          name: 'hp',
-        },
-      ],
+    const detailedPokemon = ref<DetailedPokemonType>()
+    const localStoragePokemon = ref<LocalStoragePokemonType>()
+    const showDetailedAbility = ref(false)
+    const nameOfAbility = ref('')
+    const isLoading = ref(true)
+
+    const setDetailedAbilityName = (name): void => {
+      nameOfAbility.value = name
     }
 
-    type ToExcludeFieldsType = 'abilities' | 'stats'
-
-    const localStoragePokemon: Partial<
-      Omit<DetailedPokemonType, ToExcludeFieldsType>
-    > = {
-      id: pokemonDetailed.id,
-      name: pokemonDetailed.name,
-      img: pokemonDetailed.img,
+    const toggleDetailedAbility = (name): void => {
+      showDetailedAbility.value = !showDetailedAbility.value
+      if (name !== undefined) {
+        setDetailedAbilityName(name)
+      }
     }
 
-    const oldPokemonList: typeof localStoragePokemon[] = JSON.parse(
+    const oldPokemonList: LocalStoragePokemonType[] = JSON.parse(
       localStorage.getItem('pokemon-list')
     )
 
-    onMounted((): void => {
+    const clearPage = (): void => {
+      isLoading.value = true
+      detailedPokemon.value = null
+    }
+
+    const updateLocalStorage = async (): Promise<void> => {
+      emit('update', true)
+    }
+
+    const setPokemonListInLocalStorage = async (): Promise<void> => {
       if (oldPokemonList) {
-        let newPokemonList = oldPokemonList
+        const newPokemonList = oldPokemonList
         newPokemonList.forEach((pokemon, index) => {
-          if (pokemon.id === localStoragePokemon.id) {
+          if (pokemon.id === localStoragePokemon.value['id']) {
             newPokemonList.splice(index, 1)
           }
         })
 
-        newPokemonList.unshift(localStoragePokemon)
+        newPokemonList.unshift(localStoragePokemon.value)
         if (newPokemonList.length > 5) {
           newPokemonList.pop()
         }
+
         localStorage.setItem('pokemon-list', JSON.stringify(newPokemonList))
       } else {
         localStorage.setItem(
           'pokemon-list',
-          JSON.stringify([localStoragePokemon])
+          JSON.stringify([localStoragePokemon.value])
         )
       }
+    }
+
+    const filteredId = (id): string => id?.toString().padStart(4, '0')
+
+    const getDetailedPokemon = async (id): Promise<void> => {
+      clearPage()
+
+      const [_, detailedPokemonData] = await pokemonAPI.getDetailedPokemon(id)
+      detailedPokemon.value = detailedPokemonData.pokemon
+
+      localStoragePokemon.value = {
+        id: detailedPokemon.value.id,
+        name: detailedPokemon.value.name,
+        image: detailedPokemon.value.image,
+      }
+
+      isLoading.value = false
+      await setPokemonListInLocalStorage()
+      await updateLocalStorage()
+    }
+
+    onBeforeRouteUpdate(async (to): Promise<void> => {
+      await getDetailedPokemon(to.params.id)
     })
+
+    onMounted((): void => {
+      getDetailedPokemon(props.id)
+    })
+
     return {
-      pokemonDetailed,
+      showDetailedAbility,
+      detailedPokemon,
+      nameOfAbility,
+      isLoading,
+      toggleDetailedAbility,
+      getDetailedPokemon,
+      filteredId,
     }
   },
 })
@@ -247,6 +324,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .pokemon-detailed {
   width: 80%;
+  min-height: 110vh;
 
   &__title {
     margin-bottom: 2rem;
@@ -299,6 +377,7 @@ export default defineComponent({
       position: relative;
       font-weight: 600;
       font-size: 1.1rem;
+      text-transform: capitalize;
       color: $color-dark-gray;
 
       span:first-child {
@@ -347,8 +426,6 @@ export default defineComponent({
     padding: 8px 12px;
     width: 100px;
     font-weight: 700;
-    color: $color-dark-gray;
-    background-color: $color-light-gray;
 
     &:not(:last-child) {
       margin-right: 0.5rem;
@@ -364,6 +441,7 @@ export default defineComponent({
   }
 
   &__img {
+    position: relative;
     margin-right: clamp(1rem, 4vw, 3rem);
     border-radius: 10px;
     width: 60%;
@@ -392,8 +470,8 @@ export default defineComponent({
   &__menu {
     position: relative;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    justify-content: center;
     width: 100%;
   }
 
@@ -411,27 +489,10 @@ export default defineComponent({
     width: 15%;
     text-align: center;
 
-    span {
+    &-name {
       display: block;
+      text-transform: capitalize;
       color: $color-medium-gray;
-    }
-
-    &:nth-child(1) {
-      .pokemon-stats__gauge .pokemon-stats__gauge-meter {
-        top: 80%;
-      }
-    }
-
-    &:nth-child(3) {
-      .pokemon-stats__gauge .pokemon-stats__gauge-meter {
-        top: 50%;
-      }
-    }
-
-    &:nth-child(5) {
-      .pokemon-stats__gauge .pokemon-stats__gauge-meter {
-        top: 10%;
-      }
     }
   }
 
@@ -454,7 +515,7 @@ export default defineComponent({
       position: absolute;
       top: 30%;
       z-index: 1;
-      border: none;
+      border: 1px solid #fff;
       width: 100%;
       height: 100%;
       background: linear-gradient(
@@ -465,6 +526,7 @@ export default defineComponent({
         rgba(7, 49, 113, 1) 99%
       );
       opacity: 0.9;
+      transition: all 0.9s ease-in;
     }
   }
 }
@@ -473,124 +535,197 @@ export default defineComponent({
   position: relative;
   margin: 2rem auto;
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 30px;
   min-height: 310px;
   max-width: 80%;
   background: center/ cover url('../assets/images/evolution-bg.png');
 
-  &::after {
-    content: ' ';
-    position: absolute;
-    left: -1px;
-    bottom: -1px;
-    z-index: 3;
-    width: 2em;
-    height: 2em;
-    background: center/ cover no-repeat url('../assets/images/cut-corner.png');
-    backface-visibility: hidden;
-    transform: rotate(-90deg);
+  &__item {
+    &-name {
+      margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: $color-white;
+    }
   }
 
   &__title {
-    margin-bottom: 1rem;
-    font-weight: 700;
+    margin-bottom: 2rem;
+    font-weight: 600;
     letter-spacing: 0.1em;
     color: $color-white;
   }
 
-  &__items {
+  &__small {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 100%;
+    justify-content: center;
   }
 
-  &__item {
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10rem;
+  }
+
+  &__first-item {
+    &:not(:last-child) {
+      margin-right: 10rem;
+    }
+  }
+}
+
+.pokemon-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 4rem;
 
-    &:not(:last-child) {
-      &::after {
-        content: '';
-        position: absolute;
-        right: -55%;
-        top: 41%;
-        border-top: 5px solid #fff;
-        border-right: 5px solid #fff;
-        width: 60px;
-        height: 60px;
-        background: none;
-        transform: rotate(45deg) translateY(-50%);
-      }
+    &::before {
+      content: '';
+      position: absolute;
+      left: -7rem;
+      top: 36%;
+      border-top: 6px solid $color-white;
+      border-right: 6px solid $color-white;
+      width: 60px;
+      height: 60px;
+      background-color: transparent;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
+  &__image {
+    position: relative;
+    display: block;
+    margin-bottom: 1rem;
+    border: 5px solid $color-white;
+    border-radius: 50%;
+    width: 160px;
+    height: 160px;
+    box-shadow: -2px 6px 15px $color-dark-gray;
+    background-color: $color-medium-gray;
+
+    &-small {
+      width: 100px;
+      height: 100px;
     }
 
-    &-img {
-      position: relative;
-      margin-bottom: 1rem;
-      border: 5px solid $color-white;
-      border-radius: 50%;
-      width: 160px;
-      height: 160px;
-      box-shadow: -2px 6px 15px $color-dark-gray;
-      background-color: $color-medium-gray;
+    img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 80%;
+      height: 80%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease-in;
 
-      img {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 80%;
-        height: 80%;
-        object-fit: cover;
-        transform: translate(-50%, -50%);
-        transition: width 0.3s ease-in;
+      &:hover {
+        width: 90%;
+      }
+    }
+  }
 
-        &:hover {
-          width: 90%;
+  &__name {
+    margin-right: 0.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: capitalize;
+    color: $color-white;
+  }
+
+  &__id {
+    font-size: 0.9rem;
+    color: $color-gray;
+  }
+
+  &__types {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  &__type {
+    border-radius: 5px;
+    padding: 4px 0;
+    width: 90px;
+    box-shadow: -6px 5px 11px $color-dark-gray;
+    text-align: center;
+    transition: background-color 0.3s ease-out;
+
+    &:hover {
+      color: $color-light-gray;
+      background-color: $color-dark-accent;
+    }
+
+    &:first-child {
+      margin-right: 1rem;
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    left: -11rem;
+    top: 36%;
+    border-top: 6px solid $color-white;
+    border-right: 6px solid $color-white;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  &__stage {
+    position: relative;
+    max-width: 70%;
+    gap: 30px;
+
+    &-small {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 0 0 5rem !important;
+
+      .pokemon-item__image {
+        width: 100px;
+        height: 100px;
+      }
+
+      .pokemon-item__wrapper {
+        &::before {
+          display: none;
         }
       }
     }
 
-    &-title {
-      margin-right: 0.3rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: $color-white;
+    &:not(:last-child) {
+      margin-right: 8rem;
     }
 
-    &-id {
-      font-size: 0.9rem;
-      color: $color-gray;
-    }
-
-    &-types {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 1rem;
-    }
-
-    &-type {
-      border-radius: 5px;
-      padding: 4px 0;
-      width: 90px;
-      box-shadow: -6px 5px 11px $color-dark-gray;
-      text-align: center;
-      color: $color-dark-gray;
-      background-color: $color-accent;
-      transition: background-color 0.3s ease-out;
-
-      &:hover {
-        color: $color-light-gray;
-        background-color: $color-dark-accent;
-      }
-
-      &:first-child {
-        margin-right: 1rem;
+    &:first-child {
+      .pokemon-item__wrapper {
+        &::before {
+          display: none;
+        }
       }
     }
   }
+}
+
+.circle {
+  width: 100px;
 }
 </style>

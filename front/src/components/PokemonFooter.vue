@@ -56,10 +56,6 @@
   </footer>
 </template>
 
-<script lang="ts">
-export default {}
-</script>
-
 <style scoped lang="scss">
 .pokemon-footer {
   padding: 12px 0;

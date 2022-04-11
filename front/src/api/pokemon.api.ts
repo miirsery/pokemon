@@ -6,7 +6,7 @@ class PokemonAPI extends AxiosService {
     super(config)
   }
 
-  public getPokemonList(offset, limit) {
+  public getPokemonList(offset: number, limit: number) {
     return this.axiosCall({
       method: 'get',
       url: '/api/pokemon',
@@ -14,6 +14,20 @@ class PokemonAPI extends AxiosService {
         offset: offset,
         limit: limit,
       },
+    })
+  }
+
+  public getDetailedPokemon(id: number | string | string[]) {
+    return this.axiosCall({
+      method: 'get',
+      url: `/api/pokemon/${id}`,
+    })
+  }
+
+  public getDescriptionOfAbility(name: string) {
+    return this.axiosCall({
+      method: 'get',
+      url: `/api/ability/${name}`,
     })
   }
 }
