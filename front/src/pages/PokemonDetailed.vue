@@ -97,12 +97,12 @@
                 <li
                   :style="{ top: `${100 - item.baseStat / 2}%` }"
                   class="pokemon-stats__gauge-meter"
-                ></li>
+                />
                 <li
                   class="pokemon-stats__gauge-item"
                   v-for="(pokemonItem, pokemonIndex) in 15"
                   :key="pokemonIndex"
-                ></li>
+                />
               </ul>
               <span class="pokemon-stats__item-name">
                 {{ item.name }}
@@ -125,7 +125,7 @@
               <div
                 v-if="detailedPokemon?.evolution[index].stage.length > 3"
                 class="pokemon-item__arrow"
-              ></div>
+              />
               <div
                 class="pokemon-item__wrapper"
                 v-for="pokemon in pokemonStage.stage"

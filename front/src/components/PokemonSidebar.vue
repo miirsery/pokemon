@@ -56,12 +56,8 @@ export default defineComponent({
         img: string
       }
     }
-    const pokemonListValues = ref<PokemonType[]>()
 
-    const getPokemonList = async (): Promise<void> => {
-      pokemonListValues.value = JSON.parse(localStorage.getItem('pokemon-list'))
-      await emit('updateValue', false)
-    }
+    const pokemonListValues = ref<PokemonType[]>()
 
     watch(
       (): boolean => props.isUpdated,
@@ -71,6 +67,11 @@ export default defineComponent({
         }
       }
     )
+
+    const getPokemonList = async (): Promise<void> => {
+      pokemonListValues.value = JSON.parse(localStorage.getItem('pokemon-list'))
+      await emit('updateValue', false)
+    }
 
     getPokemonList()
 

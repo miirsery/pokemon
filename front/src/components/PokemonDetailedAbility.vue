@@ -1,5 +1,5 @@
 <template>
-  <Transition name="pokemon-detailed-ability">
+  <transition name="pokemon-detailed-ability">
     <div class="pokemon-detailed-ability">
       <div class="pokemon-detailed-ability__top">
         <h3 class="pokemon-detailed-ability__title">Ability info</h3>
@@ -15,7 +15,7 @@
         {{ description }}
       </p>
     </div>
-  </Transition>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -30,11 +30,11 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
+    const description = ref('')
+
     const handleCloseDetailedAbility = (): void => {
       emit('close')
     }
-
-    const description = ref('')
 
     const getDescriptionOfAbility = async (): Promise<void> => {
       const [_, descriptionData] = await pokemonAPI.getDescriptionOfAbility(
